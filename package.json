@@ -1,0 +1,26 @@
+{
+  "name": "spotify-passport",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.16.2",
+    "body-parser": "^1.18.2",
+    "consolidate": "^0.14.5",
+    "cookie-parser": "^1.4.3",
+    "dotenv": "^4.0.0",
+    "express": "^4.16.2",
+    "express-session": "^1.15.6",
+    "handlebars": "^4.0.10",
+    "method-override": "^2.3.10",
+    "passport": "^0.4.0",
+    "passport-spotify": "^0.3.1",
+    "redis": "^2.8.0",
+    "swig": "^1.4.2"
+  }
+}

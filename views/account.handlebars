@@ -1,0 +1,76 @@
+<h2>
+	<a href="/">Home</a> 
+	<a href="/account">My account info</a> 
+	<a href="/logout">Log Out</a>
+</h2>
+
+<h1>WELCOME TO THE DJ PAGE</h1>
+<p>This is your ID: {{ user.id }}</p>
+<p>Profile: <a href=" {{ user.profileUrl }}">{{ user.profileUrl }}</a></p>
+
+<div class='flex'>
+    <div id='control'>
+        <p>your song is now playing at {{position}} miliseconds</p>
+        <a href='/play'><button id=pp><h3>PLAY</h3></button></a> <br>
+        <a href='/pause'><button id=pp><h3>PAUSE</h3></button></a> 
+        <br>
+        
+            <form action="seek" method="post">
+                <input type="text" name="seek_position" placeholder="enter time in milisecond" />
+                <input type="submit" name="playtime" value="Seekposition">
+            </form>
+            
+            
+        <br>
+        
+    
+        <h4>
+        Create your DJ playlist now!
+        </h4>
+        {{!-- action refers to route name  --}}
+        <form action="createplaylist" method="post"> 
+            {{!-- playlist_name goes after 'req.body' --}}
+            <input  type="text" name="playlist_name" placeholder="name your playlist" />
+            <input type="submit" name="create" value="create">
+        </form>
+
+        <form action="searchtrack" method="post">
+            <input type="text" name="search_track" placeholder="search for track" />
+            <input type="submit" name="search" value="search">
+        </form>
+        <br>
+    </div>
+
+    <div>
+            <p>click below to add tracks</p> 
+            
+        {{#each songlist}}
+                   <div> <span>{{name}} {{uri}} {{song_id}}
+                    </span>
+                   <a href='/track/:uri'><button class="song" value="{{uri}}">add</button></a> 
+                    </div>
+                    
+                    
+                    <br/>
+        {{/each}}
+
+    </div>
+        {{!-- <a href='/addtracks'><button id=pp><h3>Add Tracks to Playlist</h3></button></a> --}}
+
+    <div id ="playlist">
+        <h3>Your playlist name:{{name}}</h3>
+        <h3>Your sportify playlistID:{{listid}}</h3>
+
+        {{!-- {{#each song}}
+            <div> 
+                <span>
+                    {{name}}
+
+                </span>
+
+            </div> --}}
+    </div>
+
+   
+
+</div>
