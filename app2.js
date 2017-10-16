@@ -46,7 +46,7 @@ AM3_SFlist.findAll().then((data)=>{ console.log(data)});
 
 // //force to overwrite the table and create new columns (data erased)
 // //db_ap3.sync({force:true});
-// db_ap3.sync();
+
 
 ////////////////////////////////////////////////////////////////////////////
 
