@@ -46,7 +46,7 @@ passport.deserializeUser(function(obj, done) {
 passport.use(new SpotifyStrategy({
   clientID: process.env.APP_KEY,
   clientSecret: process.env.APP_SECRET,
-  callbackURL: 'http://localhost:8080/callback'
+  callbackURL: 'http://localhost:3000/callback'
   },
   function(accessToken, refreshToken, profile, done) {
     // asynchronous verification, for effect...
@@ -305,7 +305,7 @@ function getSpotifySong(user_id, res) {
 
 
 
-app.listen(3001);
+app.listen(3000);
 
 // Simple route middleware to ensure user is authenticated.
 //   Use this route middleware on any resource that needs to be protected.  If
