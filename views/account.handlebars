@@ -6,13 +6,13 @@
 
 <h1>WELCOME TO THE DJ PAGE</h1>
 <p>This is your ID: {{ user.id }}</p>
-<p>Profile: <a href=" {{ user.profileUrl }}">{{ user.profileUrl }}</a></p>
+<p>Profile: <a href="{{user.profileUrl}}">{{ user.profileUrl }}</a></p>
 
 <div class='flex'>
     <div id='control'>
         <p>your song is now playing at {{position}} miliseconds</p>
         <button id=playbutton><h3>PLAY</h3></button> <br><br>
-        <h3 id=error></h3>
+        <h5 id=error></h5>
         <button id=pausebutton><h3>PAUSE</h3></button>
         <h3></h3>
         <br>
@@ -51,7 +51,7 @@
                        <span>
                             {{name}} {{uri}} {{song_id}}
                         </span>
-                        <a href='/track/:uri'><button class="song" value="{{uri}}">add</button></a> 
+                        <button class="song" value="{{uri}}">add</button>
                     
                     </div>
         {{/each}}
