@@ -142,8 +142,13 @@ app.get('/play', function(req, res){
       headers: {Authorization: "Bearer "+ data}
     })
 
-  .then(function(response){console.log('play button is working !')})
-  .catch((err) =>console.log('error occurs',err))
+  .then(function(response){
+    console.log(response)
+    console.log('play button is working !')})
+    //use ajax here if dont want to refresh page 
+    //use send and render if need to refresh page
+    // res.send('')
+  .catch((err) =>console.log('play button error',err))
   })
 });
 
