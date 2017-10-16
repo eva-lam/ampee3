@@ -24,9 +24,9 @@
 		<div id="controler container-fluid">
 			<div id="playlist-container" class="grid-row col-lg-4 col-md-4 col-sm-4 col-xs-12 bg-two">
 				<h5>Next Song: </h5>
-				<div id="playlist">
+				<ul id="playlist">
 
-				</div>
+				</ul>
 			</div>
 			<div id="search-container" class="grid-row col-lg-8 col-md-8 col-sm-8 col-xs-12 bg-one">
 				<form id=search-box>
@@ -42,21 +42,30 @@
 		<script src="https://apis.google.com/js/client.js?onload=init"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.slim.js"></script>
 
-		<script>
+		<!-- <script>
+		$(function () {
         //making socket.io object itself can make connection 
-        var socket = io();
-        //take the message from from when submit are click
-        $('body').delegate('.search-res-container', 'click',()=>{
-				var id = $('.search-res-container').attr('id')
-				var title = $(".search-res-container .title").text()
-				console.log(`A video is added into playlist. ID: ${id} title:${title} `)
-				socket.emit('nQueue', id, title)
-        })
-
-        // socket.on('chat message',(msg) => {
-        //     $(`<div style="display: none;"><p>${msg}</p></div>`).appendTo($('.msgbox')).show(300);})
-
-
-		</script>
+			var socket = io(); 
+			//take the message from from when submit are click
+			$('body').delegate('.addSongBtn', 'click',()=>{
+					var videoID = $('.search-res-container').attr('id')
+					var videoTitle = $(".search-res-container .title").text()
+					console.log(`A video is added into playlist. ID: ${videoID} title:${videoTitle} `)
+					socket.emit('sendSongToQueue', videoID, videoTitle)
+			})
+			socket.on('receiveSongToQueue', (videoID, videoTitle)=>{
+				console.log(`${videoID} and ${videoTitle}`)
+				$.get("partial-html/videos-on-playlist.html", function(data){
+					$("#playlist").append(tplawesome(
+							data, [{
+								"title": videoTitle,
+								"videoID": videoID
+							}]
+						))
+				console.log(`supposed that ${videoTitle} is added into the playlist`)
+				})
+			});
+		})
+		</script> -->
 	</body>
 </html>

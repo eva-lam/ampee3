@@ -16,10 +16,10 @@ app.get('/', (req, res) => {
 io.on('connection', (socket) => {
 
   console.log(' A client is connected from Chrome');
-    socket.on('nQueue', (videoID, videoTitle) => {
+    socket.on('sendSongToPlaylist', (videoID, videoTitle) => {
       console.log(`I get: ${videoID} ${videoTitle}`)
+      io.emit('addSongToPlaylist', videoID, videoTitle);
     })
-    io.emit('new song on playlist', videoID);
 
 })
 

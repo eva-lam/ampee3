@@ -4,10 +4,10 @@ body {
 	text-align: center;
 }
 
-p {
+ p {
 	padding: 10px;
 	margin: 0px;
-}
+} 
 
 ul {
 	list-style-type: none
@@ -51,9 +51,11 @@ ul {
 	min-width: 100px;
 }
 
-.button-container {
-	display: flex;
-	justify-content: center;
+.videoInfo {
+	border-color: lightgrey;
+	border-width: 5px;
+	display: inline-flex;
+	justify-content: left;
 	align-items: center;
+	padding: 10px;
 }
-
