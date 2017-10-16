@@ -25,6 +25,11 @@ h3{
     text-align: center;
 }
 
+#error{
+    color: rgb(216, 63, 16);
+    font-size:14px;
+    text-align: center;
+}
 h4{
     color:orange;
     font-size:22px;

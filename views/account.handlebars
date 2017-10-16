@@ -12,7 +12,9 @@
     <div id='control'>
         <p>your song is now playing at {{position}} miliseconds</p>
         <button id=playbutton><h3>PLAY</h3></button> <br><br>
+        <h3 id=error></h3>
         <button id=pausebutton><h3>PAUSE</h3></button>
+        <h3></h3>
         <br>
         
             <form action="seek" method="post">
@@ -22,7 +24,6 @@
             
             
         <br>
-        
     
         <h4>
         Create your DJ playlist now!
@@ -33,11 +34,12 @@
             <input  type="text" name="playlist_name" placeholder="name your playlist" />
             <input type="submit" name="create" value="create">
         </form>
-
+        <br>
         <form action="searchtrack" method="post">
             <input type="text" name="search_track" placeholder="search for track" />
             <input type="submit" name="search" value="search">
         </form>
+
         <br>
     </div>
 
@@ -45,13 +47,13 @@
             <p>click below to add tracks</p> 
             
         {{#each songlist}}
-                   <div> <span>{{name}} {{uri}} {{song_id}}
-                    </span>
-                   <a href='/track/:uri'><button class="song" value="{{uri}}">add</button></a> 
+                   <div> 
+                       <span>
+                            {{name}} {{uri}} {{song_id}}
+                        </span>
+                        <a href='/track/:uri'><button class="song" value="{{uri}}">add</button></a> 
+                    
                     </div>
-                    
-                    
-                    <br/>
         {{/each}}
 
     </div>

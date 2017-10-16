@@ -3,9 +3,12 @@ $("#playbutton").click(function(){
         type: 'GET',
         url: '/play',
 		})
-		.done(function( data ) {
+		.done(function(data) {
 			if ( data != null ) {
-			  console.log( "You might need to be a premium member to access this feature" );
+			//here we use DOM manipulation ""refers to tag
+			//".friends refers to class "
+			//"#friends refers to id "
+			$("#error").html( "You might need to be a premium member to access this feature" );
 			}
 		  });
 })
@@ -17,7 +20,8 @@ $("#pausebutton").click(function(){
 		})
 		.done(function( data ) {
 			if (data != null) {
-			  console.log( "You might need to be a premium member to access this feature" );
+			$("#error").html( "You might need to be a premium member to access this feature" );
+			  
 			}
 		  });
 })
