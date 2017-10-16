@@ -132,7 +132,6 @@ app.get('/logout', function(req, res){
 //play button 
 app.get('/play', function(req, res){
   const user_id = req.user.id;
-
   client.get(user_id, (err, data) =>{
     //axios is to obtain info from third-party server 
     axios({
@@ -140,34 +139,47 @@ app.get('/play', function(req, res){
       method: "PUT",
       url: 'https://api.spotify.com/v1/me/player/play',
       headers: {Authorization: "Bearer "+ data}
+    }).then(function(response){
+      console.log('play button is working !')
+      //use send and render if need to refresh page
+      res.json(null) //server-side ajax //use ajax here if dont want to refresh page 
+    }).catch((err) =>{
+      console.log('play button error',err)
+      res.json(err)
     })
-
-  .then(function(response){
-    console.log(response)
-    console.log('play button is working !')})
-    //use ajax here if dont want to refresh page 
-    //use send and render if need to refresh page
-    // res.send('')
-  .catch((err) =>console.log('play button error',err))
   })
 });
 
+app.get('/account/:user_id', (req, res) =>{
+  //to get information it's always request 
+  const user_id = req.user.id;
+
+  //client - redis - get stored  from redis
+  client.get(user_id, (err, data) =>{
+      if(err || data == null) {
+          //if account data doesn't exist, will get GithubData 
+          getSpotifydata(user_id, res);
+      } else {
+          //if data exists, would just send back the data 
+          res.send(data);
+      }
+  });
+});
 
 //pause button
 app.get('/pause', function(req, res){
   const user_id = req.user.id;
   //get user_id from redis(below)
   client.get(user_id, (err, data) =>{
-    
     axios({
       method: "PUT",
       url: 'https://api.spotify.com/v1/me/player/pause',
       headers: {Authorization: "Bearer "+ data}
+      }).then(function(response){
+          console.log('pause button is working !')
+          res.json(null)
+      }).catch((err) =>console.log('pause button error',err))
     })
-    //axios'response
-  .then(function(response){console.log('pause button is working !')})
-  .catch((err) =>console.log('error occurs',err))
-  })
 });
 
 //seek to position button -Seeks to the given position in the user’s currently playing track.
@@ -180,15 +192,12 @@ app.post('/seek', function(req, res){
       method: "PUT",
       url: `https://api.spotify.com/v1/me/player/seek?position_ms=${time}`,
       headers: {Authorization: "Bearer "+ data}
-    })
-  .then(function(response){
-    console.log(`seek is working at position ${time}ms !`)
-    //format of res.render
-    //res.render(variable used in handlebars in strings, object)
-    console.log(response)
-    res.render('account',{"position":time})
-  })
-  .catch((err) =>console.log('error occurs',err))
+
+    }).then(function(response){
+      console.log(`seek is working at position ${time}ms !`)
+      console.log(response)
+      res.render('account',{"position":time})
+    }).catch((err) =>console.log('seek position error',err))
   })
 });
 
@@ -210,16 +219,16 @@ app.post('/createplaylist',function(req,res){
   .then(function(response){
     console.log("playlist created!")
     const playlist_id = response.data.id
-      client.set(playlist_id, function(err, data) {
-        if(err) {
+        client.set(playlist_id, function(err, data) {
+          if(err) {
           return console.log(err);
-        }
-      })
-    res.render('account',{"name":listname,"listid":playlist_id})
-  })
-  .catch((err) =>console.log('error occurs',err))
+          }
+        })
+     res.render('account',{"name":listname,"listid":playlist_id})
+  }).catch((err) =>console.log('error occurs',err))
   })
 });
+
 
 app.post('/searchtrack',function(req,res){
   let item = req.body.search_track
@@ -239,7 +248,7 @@ app.post('/searchtrack',function(req,res){
       const song_id = response.data.tracks.items
       res.render('account',{"songlist":song_id})
     })
-    .catch((err) =>console.log('error occurs',err))
+    .catch((err) =>console.log('search error occurs',err))
     })
   });
 
@@ -270,30 +279,29 @@ app.post('/track/:uri', (req, res) =>{
   });
 });
 
-// // retrieveSpotify Song  
-// function getSpotifySong(username, res) {
-//   //axios is promise 
-//   axios.get({
-//     method:"GET",
-//     url:`https://api.spotify.com/v1/tracks/${song_id}`,
-//     headers:{Authorization: "Bearer "+ data},
-//     contentType: 'application/json',
-//     data:{'track':item}
-//   })
-
-//       .then(list => {
-//           //property of res there are plenty e.g. res.render 
-//           res.send(list.data);
-//           // keep data around for max 1h in case user activity updates
-//           //save sth to redis so that we don't have to request again from github 
-//           //redis can only store strings so we need to stringify 
-//           client.set(username,60*60, JSON.stringify(list.data) , (err)=>{
-//               if(err) console.log(err);   
-//           });
-//       })
-//       //part of axio promise
-//       .catch(err => console.log(err));
-// }
+// retrieveSpotify Song  
+function getSpotifySong(user_id, res) {
+  //axios is promise 
+  axios.get({
+    method:"GET",
+    url:`https://api.spotify.com/v1/tracks/${song_id}`,
+    headers:{Authorization: "Bearer "+ data},
+    contentType: 'application/json',
+    data:{'track':item}
+  })
+      .then(list => {
+          //property of res there are plenty e.g. res.render 
+          res.send(list.data);
+          // keep data around for max 1h in case user activity updates
+          //save sth to redis so that we don't have to request again from github 
+          //redis can only store strings so we need to stringify 
+          client.set(user_id,60*60, JSON.stringify(list.data) , (err)=>{
+              if(err) console.log(err);   
+          });
+      })
+      //part of axio promise
+      .catch(err => console.log(err));
+}
 
 
 
