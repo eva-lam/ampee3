@@ -305,7 +305,7 @@ function getSpotifySong(user_id, res) {
 
 
 
-app.listen(8080);
+app.listen(3001);
 
 // Simple route middleware to ensure user is authenticated.
 //   Use this route middleware on any resource that needs to be protected.  If
