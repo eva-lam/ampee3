@@ -1,0 +1,4 @@
+create user ampee3 with password 'ytsfmusic';
+CREATE DATABASE ampee3;
+grant all privileges on database ampee3 to ampee3;
+sequelize db:migrate
