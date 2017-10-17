@@ -4,10 +4,10 @@ const app = express();
 const http = require('http').Server(app);
 const io = require('socket.io')(http);
 
-app.use(express.static('public', {index: 'newIndex.html'}))
+app.use(express.static('public', {index: 'djRoom.html'}))
 
 app.get('/', (req, res) => {
-  res.sendFile(__dirname + '/newIndex.html');
+  res.sendFile(__dirname + '/djRoom.html');
 });
 
 
@@ -20,7 +20,6 @@ io.on('connection', (socket) => {
       console.log(`I get: ${videoID} ${videoTitle}`)
       io.emit('addSongToPlaylist', videoID, videoTitle);
     })
-
 })
 
 
