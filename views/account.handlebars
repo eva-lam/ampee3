@@ -1,7 +1,7 @@
 <h2>
-	<a href="/">Home</a> 
+    <div><a href="/">Home</a> 
 	<a href="/account">My account info</a> 
-	<a href="/logout">Log Out</a>
+	 <a href="/logout">Log Out</a> </div>
 </h2>
 
 <h1>WELCOME TO THE DJ PAGE</h1>
@@ -9,9 +9,61 @@
 <p>Profile: <a href="{{user.profileUrl}}">{{ user.profileUrl }}</a></p>
 
 <div class='flex'>
+    <div id='control'>    
+        <br>
+    
+        <h3>Step 1: Create your DJ playlist now!</h3>
+        {{!-- action refers to route name  --}}
+        <form action="createplaylist" method="post"> 
+            {{!-- playlist_name goes after 'req.body' --}}
+            <input  type="text" name="playlist_name" placeholder="name your playlist" />
+            <input type="submit" name="create" value="create">
+        </form>
+
+        <br>
+        <h3>Step 2: Search track and add track to your playlist!</h3>
+        <form action="searchtrack" class="searching" method="post">
+            <input type="text" name="search_track" placeholder="search for track" />
+            <input type="submit" name="search" value="search">
+        </form>
+
+       
+    </div>
+    
+
+    <div id="control">
+            <h3>Step 3: click below to add tracks</h3> 
+            
+        {{#each songlist}}
+
+        {{!-- <form action="addtrack" method="post">
+            <input type="text" name="song_name" placeholder="search for track" />
+            <input type="submit" name="search" value="search">
+        </form> --}}
+                   <div class ="result"> 
+                       <span>
+                            {{name}} {{uri}} 
+                            <br>{{song_id}}
+                        </span>
+                        <button class="song" value="{{uri}}">add</button>
+                    </div>
+        {{/each}}
+
+    </div>
+
+    <div id ="playlist">
+        
+        <h4>Your playlist name:{{name}}</h4>
+        <h5>Your sportify playlistID:{{listid}}
+        <br>Your selected songs are shown below</h5>
+        <h5 id="list_ofSongs"></h5>
+      
+    </div>
+    
     <div id='control'>
-        <p>your song is now playing at {{position}} miliseconds</p>
-        <button id=playbutton><h3>PLAY</h3></button> <br><br>
+        <h3>Step 4: Now you can control your song!</h3>
+        
+        <button id=playbutton><h3>PLAY</h3></button> <br>
         <h5 id=error></h5>
         <button id=pausebutton><h3>PAUSE</h3></button>
         <h3></h3>
@@ -21,58 +73,16 @@
                 <input type="text" name="seek_position" placeholder="enter time in milisecond" />
                 <input type="submit" name="playtime" value="Seekposition">
             </form>
-            
-            
-        <br>
-    
-        <h4>
-        Create your DJ playlist now!
-        </h4>
-        {{!-- action refers to route name  --}}
-        <form action="createplaylist" method="post"> 
-            {{!-- playlist_name goes after 'req.body' --}}
-            <input  type="text" name="playlist_name" placeholder="name your playlist" />
-            <input type="submit" name="create" value="create">
-        </form>
-        <br>
-        <form action="searchtrack" method="post">
-            <input type="text" name="search_track" placeholder="search for track" />
-            <input type="submit" name="search" value="search">
-        </form>
-
-        <br>
-    </div>
-
-    <div>
-            <p>click below to add tracks</p> 
-            
-        {{#each songlist}}
-                   <div> 
-                       <span>
-                            {{name}} {{uri}} {{song_id}}
-                        </span>
-                        <button class="song" value="{{uri}}">add</button>
-                    
-                    </div>
-        {{/each}}
-
-    </div>
-        {{!-- <a href='/addtracks'><button id=pp><h3>Add Tracks to Playlist</h3></button></a> --}}
-
-    <div id ="playlist">
-        <h3>Your playlist name:{{name}}</h3>
-        <h3>Your sportify playlistID:{{listid}}</h3>
-
-        {{!-- {{#each song}}
-            <div> 
-                <span>
-                    {{name}}
-
-                </span>
-
-            </div> --}}
-    </div>
-
-   
+            <p>Your song is now playing at {{position}} miliseconds</p>
+    </div>    
 
 </div>
+
+
+<script src="https://code.jquery.com/jquery-3.2.1.min.js"integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="crossorigin="anonymous"></script>
+{{!-- <script>
+    
+    $('.result').on('click','.song',()=>{
+        $('#list_ofSongs').append("<h5>{{name}}</h5>")})
+        
+</script> --}}

@@ -131,7 +131,8 @@ app.get('/logout', function(req, res){
 
 //play button 
 app.get('/play', function(req, res){
-  const user_id = req.user.id;
+  const user_id = req.user.id; // same as profile.username in spotify strategy 
+
   client.get(user_id, (err, data) =>{
     //axios is to obtain info from third-party server 
     axios({
@@ -139,6 +140,7 @@ app.get('/play', function(req, res){
       method: "PUT",
       url: 'https://api.spotify.com/v1/me/player/play',
       headers: {Authorization: "Bearer "+ data}
+
     }).then(function(response){
       console.log('play button is working !')
       //use send and render if need to refresh page
@@ -219,11 +221,18 @@ app.post('/createplaylist',function(req,res){
   .then(function(response){
     console.log("playlist created!")
     const playlist_id = response.data.id
-        client.set(playlist_id, function(err, data) {
+        client.set("New Playlist",playlist_id, function(err, data) {
           if(err) {
           return console.log(err);
           }
         })
+        //redis key now is playlistname
+        client.set("playlistname",listname, function(err, data) {
+          if(err) {
+          return console.log(err);
+          }
+        })
+        
      res.render('account',{"name":listname,"listid":playlist_id})
   }).catch((err) =>console.log('error occurs',err))
   })
@@ -231,8 +240,10 @@ app.post('/createplaylist',function(req,res){
 
 
 app.post('/searchtrack',function(req,res){
-  let item = req.body.search_track
-  let user_id = req.user.id; 
+  const item = req.body.search_track
+  const listname = req.body.playlist_name
+  const user_id = req.user.id; 
+
   client.get(user_id,(err,data)=>{
     axios({
       method:"GET",
@@ -242,46 +253,97 @@ app.post('/searchtrack',function(req,res){
       data:{'track':item}
     })
     .then(function(response){
-      console.log(response);
       console.log("Search success!")
-      
       const song_id = response.data.tracks.items
-      res.render('account',{"songlist":song_id})
-    })
-    .catch((err) =>console.log('search error occurs',err))
+      let listname = '',
+          playlistid = '' ;
+
+  // NEED to render in a nested redis get because res.render respond would have responded to first info before second
+      client.get("New Playlist", function(err, data1) {
+          console.log(data1); 
+          if(err) {
+            return console.log(err);
+          }
+
+          client.get("playlistname", function(err, data2) {
+              console.log(data2); 
+              if(err) {
+                return console.log(err);
+              }
+
+              res.render('account',{"songlist":song_id,"name":data2,"listid":data1})
+            })
+        })
+    }).catch((err) =>console.log('search error occurs',err))
     })
   });
 
-
-// //when user clicks then that song is added to playlist
-app.post('/track/:uri', (req, res) =>{
-  //to get information it's always request 
-  let uri = req.params.uri;
+app.post('/addtrack', (req, res) =>{
   let user_id = req.user.id; 
-
+  //uris is equal to key of value of event.currentTarget...
+  let uri = req.body.uris;
+ //playlist_id is not stored in redis yet 
   //client - redis - get playlist id info
-  client.get(playlist_id, (err, data) =>{
+  client.get("New Playlist", (err, data1) =>{
+ //auth and content-type required
+    client.get(user_id, (err, data2)=>{
+        console.log(data2); 
+        if(err) {
+          return console.log(err);
+        }
+        axios({
+          method:"POST",
+          url: `https://api.spotify.com/v1/users/${user_id}/playlists/${data1}/tracks`,
+          headers:{Authorization: "Bearer "+ data2},
+          contentType: 'application/json',
+          //optional to pass uris and position 
+          //here we put song_id to be added to playlist_id 
+          data:{"uris":[uri]}
 
-    axios({
-      method:"POST",
-      url: `https://api.spotify.com/v1/users/${user_id}/playlists/${playlist_id}/tracks`,
-      headers:{Authorization: "Bearer "+ data},
-      contentType: 'application/json',
-      data:{"position": 0, "uris": "spotify:track:1i1fxkWeaMmKEB4T7zqbzK"}
+
+        }).then(function(response){
+            
+          res.json({"snapshotId":response.snapshot_id})
+
+         }).catch((err) =>console.log('track adding error occurs',err))
+      })
+
     })
-      if(err || data == null) {
-          //if activity data doesn't exist, will get GithubData 
-          getSpotifySong(uri, res);
-      }else {
-          //if data exists, would just send back the data 
-          res.send(data);
-      }
-  });
-});
 
-// retrieveSpotify Song  
-function getSpotifySong(user_id, res) {
+  });
+
+  app.get('/listtrack', (req, res) =>{
+      let user_id = req.user.id; //get access token value stored in redis 
+      let uri = req.body.uris;
+      client.get("New Playlist", (err, data1) =>{
+
+        client.get(user_id, (err, data2)=>{
+          axios({
+            method:"GET",
+            url: `https://api.spotify.com/v1/users/${user_id}/playlists/${data1}/tracks`,
+            headers:{Authorization: "Bearer "+ data2},
+            contentType: 'application/json',
+            
+        
+          }).then(function(response){
+              console.log(response.data)
+              let songName_onList = response.data.items.map(function(element){
+                return element.track.name
+              })
+              res.json({"listed_song":songName_onList})
+
+          }).catch((err) =>console.log('track adding error occurs',err))
+          
+        })
+  
+      })
+  
+    });
+
+function getSpotifySong(uri, res) {
+  let song_id = uri 
   //axios is promise 
+
   axios.get({
     method:"GET",
     url:`https://api.spotify.com/v1/tracks/${song_id}`,
