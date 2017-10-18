@@ -1,12 +1,11 @@
 body {
     background-image: url("music.jpg");
     background-repeat: no-repeat; 
-    height: 800px; 
+    height: 1200px; 
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
     text-align:center; 
-    
 }
 
 h1 {
@@ -35,6 +34,17 @@ h4{
     font-size:22px;
     text-align: center;
 }
+h5{
+    color:white;
+    font-size:16px;
+    text-align: center;
+}
+
+h6{
+    color:gold;
+    font-size:16px;
+    text-align: center;
+}
 #pp{
     height:80px;
     width:170px; 
@@ -58,6 +68,7 @@ h4{
 #control {
     width: 30%;
     margin-left: 10px;
+    background-color: black;
 }
 
 #create {
@@ -65,9 +76,14 @@ h4{
     margin-left:30px;
 }
 
+.searching{
+    background:black; 
+}
+
 #playlist {
     width: 30%;
     margin-left:30px;
+    background-color:black;
 }
 
 input[type=text] {
@@ -81,4 +97,28 @@ input[type=text] {
     width: 100px;
     border: solid blue 1px;
     margin: 5px;
+}
+
+.result{
+    font-size: 10px;
+    background:ghostwhite; 
+
+}
+
+#playbutton{
+    background-color:gainsboro;
+    height:80px;
+    width:100px; 
+    margin-left: 5px;
+    margin-bottom:5px;
+    text-align: center;
+}
+
+#pausebutton{
+    background-color:gainsboro;
+    height:80px;
+    width:100px; 
+    margin-left: 10px;
+    margin-bottom:10px;
+    text-align: center;
 }
