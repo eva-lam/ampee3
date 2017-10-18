@@ -1,3 +1,7 @@
+module.exports = function(http){
+const ioo = require('socket.io')(http);
+var USER_INFO ={}
+
 var io = ioo.of('/djroom');
 io.on('connection', (socket) => {
 
@@ -79,5 +83,5 @@ io.on('connection', (socket) => {
 })
 
 
-
+}
 

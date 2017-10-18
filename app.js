@@ -4,13 +4,20 @@ const express = require('express'),
       session = require('express-session'),
       passport = require('passport'),
       axios = require('axios'),
-      SpotifyStrategy = require('passport-spotify').Strategy;
-      hb = require('express-handlebars');
+      SpotifyStrategy = require('passport-spotify').Strategy,
+      hb = require('express-handlebars'),
+      app = express(),
+      http = require('http').Server(app)
+      
+      
+
 
 let URL = 'http://localhost:8080';
 //here we import dotenv, env must store in root directory
 //we don't assign it as variable since we don't need them anymore afterwards
 require('dotenv').config()
+require('./server_socket.js')(http); 
+
 
 const redis = require('redis');
 //use redis to cache spotify username and accesstoken 
@@ -22,6 +29,40 @@ const client = redis.createClient({
 client.on('error', function(err){
     console.log(err);
 });
+
+
+// io.on('connection', (socket)=>{
+
+//    var current_room;
+
+// 	//dj room creation and register DJ
+// 	socket.on('new room', (room)=>{
+// 		socket.join(room,  () => {
+// 			let id_room_pair = Object.keys(socket.rooms); // [ <socket.id>, 'room 237' ]
+// 			USER_INFO[id_room_pair[0].substring(8,id_room_pair[0].length)] = [id_room_pair[1], 'd'];    //'d' is dj
+// 			for (x in USER_INFO){console.log(`dj info ${x} in room: ${USER_INFO[x]}`)}; // actual info
+			
+// 			current_room = USER_INFO[socket.id.substring(8,socket.id.length)][0];
+			
+// 		})
+// 		console.log(`A new DJ is creating a room and join ${current_room}`);
+		
+// 		socket.emit('say', `hello, you joined ${current_room}`)
+// 	});
+
+// 	//client only join room
+// 	socket.on('new client', (room)=>{
+// 		socket.join(room,  () => {
+// 			let id_room_pair = Object.keys(socket.rooms); // [ <socket.id>, 'room 237' ]
+// 			USER_INFO[id_room_pair[0].substring(8,id_room_pair[0].length)] = [id_room_pair[1], 'c'];
+// 			for (x in USER_INFO){console.log(`client info ${x} in room: ${USER_INFO[x]}`)}; // actual info
+			
+// 			current_room = USER_INFO[socket.id.substring(8,socket.id.length)][0];
+
+// 			console.log('here is '+ current_room)
+// 		})
+// 	})
+// });
 
 // Passport session setup.
 //   To support persistent login sessions, Passport needs to be able to
@@ -68,7 +109,7 @@ passport.use(new SpotifyStrategy({
     });
   }));
 
-const app = express();
+
 // configure Express
 app.set('views', __dirname + '/views');
 
@@ -104,13 +145,16 @@ app.get('/login', function(req, res){
   res.render('login', { user: req.user });
 });
 
+app.get('/joinparty',function(req,res){
+  res.render('joinparty')
+});
 // GET /auth/spotify
 //   Use passport.authenticate() as route middleware to authenticate the
 //   request. The first step in spotify authentication will involve redirecting
 //   the user to spotify.com. After authorization, spotify will redirect the user
 //   back to this application at /auth/spotify/callback
 app.get('/auth/spotify',
-  passport.authenticate('spotify', {scope: ['user-read-email', 'user-read-private','streaming','playlist-modify-private','playlist-read-private','playlist-read-collaborative','user-modify-playback-state'], showDialog: true}));
+  passport.authenticate('spotify', {scope: ['user-read-email', 'user-read-private','streaming','playlist-modify-private','playlist-read-private','playlist-read-collaborative','user-modify-playback-state', 'user-read-currently-playing', 'user-read-playback-state'], showDialog: true}));
 
 // GET /auth/spotify/callback
 //   Use passport.authenticate() as route middleware to authenticate the
@@ -129,6 +173,56 @@ app.get('/logout', function(req, res){
   req.logout();
   res.redirect('/');
 });
+
+//get DJ playback information
+let current_position;
+let current_track;
+
+app.get('/syncDJ', function(req, res){
+  	const user_id = req.user.id;
+  	client.get(user_id, (err,data) => {
+		axios({
+			method: "GET",
+			url: `https://api.spotify.com/v1/me/player`,
+			headers: {Authorization: "Bearer " + data},
+		})
+		.then(function(response){
+			current_position = response.data.progress_ms;
+			current_track = response.data.item.id;
+			console.log("current playback information grabbed!")
+      console.log(current_position);
+      res.json(null) 
+		})
+		.catch((err) => console.log('error occurred', err))
+ 	 })
+})
+
+//sync with the same song as DJ
+app.get('/syncParty', function(req, res){
+	let user_id = req.user.id;
+	client.get(user_id, (err, data) => {
+		axios({
+			method: "PUT",
+			url: `https://api.spotify.com/v1/me/player/play`,
+			headers: {Authorization: "Bearer " + data},
+			data: {"uris": [`spotify:track:${current_track}`]}
+		}, console.log(data))
+		.then(function(response){
+			axios({
+				method: "PUT",
+				url: `https://api.spotify.com/v1/me/player/seek?position_ms=${current_position}`,
+				headers: {Authorization: "Bearer " + data},
+			})
+			.then(function(response){
+        console.log("synced with DJ!")
+        res.json(null) 
+			})
+			.catch((err) => console.log('error occurred', err))
+		})
+		.catch((err) => console.log('error occurred', err))
+	})
+})
+
 
 //play button 
 app.get('/play', function(req, res){
@@ -185,8 +279,29 @@ app.get('/pause', function(req, res){
     })
 });
 
+//getplaylist button
+app.get('/getplaylist', function(req, res){
+  const user_id = req.user.id;
+  //get user_id from redis(below)
+  client.get(playlist_id,(err,data)=> {
+
+     client.get(user_id, (err, data) =>{
+      
+      axios({
+        method: "GET",
+        url: `https://api.spotify.com/v1/users/${user_id}/playlists/${playlist_id}`,
+        headers: {Authorization: "Bearer "+ data}
+      }).then(function(response){
+          console.log('obtained playlist !')
+          res.json(null)
+      }).catch ((err) =>console.log('could not get playlist',err))
+    })
+  })
+});
+
 //seek to position button -Seeks to the given position in the user’s currently playing track.
 app.post('/seek', function(req, res){
+  console.log(req.body)
   const user_id = req.user.id;
   const time = req.body.seek_position; // always put name of user's input 
   //get user_id from redis(below)
@@ -197,9 +312,9 @@ app.post('/seek', function(req, res){
       headers: {Authorization: "Bearer "+ data}
 
     }).then(function(response){
-      console.log(`seek is working at position ${time}ms !`)
-      console.log(response)
-      res.render('account',{"position":time})
+        console.log(`seek is working at position ${time}ms !`)
+        console.log(response)
+        res.json({"position":time})
     }).catch((err) =>console.log('seek position error',err))
   })
 });
@@ -271,8 +386,7 @@ app.post('/searchtrack',function(req,res){
               if(err) {
                 return console.log(err);
               }
-
-              res.render('account',{"songlist":song_id,"name":data2,"listid":data1})
+              res.json({"songlist":song_id,"name":data2,"listid":data1})
             })
         })
     }).catch((err) =>console.log('search error occurs',err))
@@ -312,6 +426,39 @@ app.post('/addtrack', (req, res) =>{
     })
 
   });
+
+  app.delete('/deletetrack', (req, res) =>{
+    let user_id = req.user.id; 
+    //uris is equal to key of value of event.currentTarget...
+    let uri = req.body.uris;
+   //playlist_id is not stored in redis yet 
+    //client - redis - get playlist id info
+    client.get("New Playlist", (err, data1) =>{
+   //auth and content-type required
+      client.get(user_id, (err, data2)=>{
+          console.log(data2); 
+          if(err) {
+            return console.log(err);
+          }
+          axios({
+            method:"DELETE",
+            url: `https://api.spotify.com/v1/users/${user_id}/playlists/${data1}/tracks`,
+            headers:{Authorization: "Bearer "+ data2},
+            contentType: 'application/json',
+            //optional to pass uris and position 
+            //here we put song_id to be added to playlist_id 
+            data:{"tracks":[{uri}]}
+  
+          }).then(function(response){
+              
+            res.json({"snapshotId":response.snapshot_id})
+  
+           }).catch((err) =>console.log('track adding error occurs',err))
+        })
+  
+      })
+  
+    });
 
   app.get('/listtrack', (req, res) =>{
       let user_id = req.user.id; //get access token value stored in redis 
@@ -368,7 +515,7 @@ function getSpotifySong(uri, res) {
 
 
 
-app.listen(3000);
+http.listen(3000);
 
 // Simple route middleware to ensure user is authenticated.
 //   Use this route middleware on any resource that needs to be protected.  If
