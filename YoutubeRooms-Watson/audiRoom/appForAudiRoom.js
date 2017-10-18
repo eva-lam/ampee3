@@ -41,7 +41,7 @@ io.on('connection', (socket)=>{
         socket.emit('addSongToPlaylist', song)
       })
     })
-  }) // e:audiReqPlaylist ends 
+  }) // e:audiReqPlaylist ends
 
 })
 
