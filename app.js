@@ -57,6 +57,7 @@ passport.use(new SpotifyStrategy({
       client.set(profile.username, accessToken, function(err, data) {
         if(err) {
             return console.log(err);
+
         }
       })
       // To keep it simple, the user's spotify profile is returned to
@@ -119,7 +120,7 @@ app.get('/auth/spotify',
 app.get('/callback',
   passport.authenticate('spotify', { failureRedirect: '/login' }),
   function(req, res) {
-    res.redirect('account');
+    res.redirect('/account');
   });
 
 //app.METHOD(PATH, HANDLER)

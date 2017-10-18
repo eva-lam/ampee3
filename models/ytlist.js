@@ -4,7 +4,8 @@ module.exports = (sequelize, DataTypes) => {
     YT_video_id: DataTypes.STRING,
     YT_title: DataTypes.STRING,
     YT_video_thumbnailurl: DataTypes.STRING,
-    YT_video_duration: DataTypes.STRING
+    YT_video_duration: DataTypes.STRING,
+    DJ_room: DataTypes.STRING
   }, {
     classMethods: {
       associate: function(models) {
