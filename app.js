@@ -7,16 +7,17 @@ const express = require('express'),
       SpotifyStrategy = require('passport-spotify').Strategy,
       hb = require('express-handlebars'),
       app = express(),
-      http = require('http').Server(app),
-      ioo = require('socket.io')(http);
+      http = require('http').Server(app)
       
-var USER_INFO ={}
+      
+
 
 let URL = 'http://localhost:8080';
 //here we import dotenv, env must store in root directory
 //we don't assign it as variable since we don't need them anymore afterwards
 require('dotenv').config()
-// require('./server_socket.js'); 
+require('./server_socket.js')(http); 
+
 
 const redis = require('redis');
 //use redis to cache spotify username and accesstoken 
@@ -29,39 +30,39 @@ client.on('error', function(err){
     console.log(err);
 });
 
-var io = ioo.of('/djroom');
-io.on('connection', (socket)=>{
 
-   var current_room;
+// io.on('connection', (socket)=>{
 
-	//dj room creation and register DJ
-	socket.on('new room', (room)=>{
-		socket.join(room,  () => {
-			let id_room_pair = Object.keys(socket.rooms); // [ <socket.id>, 'room 237' ]
-			USER_INFO[id_room_pair[0].substring(8,id_room_pair[0].length)] = [id_room_pair[1], 'd'];    //'d' is dj
-			for (x in USER_INFO){console.log(`dj info ${x} in room: ${USER_INFO[x]}`)}; // actual info
+//    var current_room;
+
+// 	//dj room creation and register DJ
+// 	socket.on('new room', (room)=>{
+// 		socket.join(room,  () => {
+// 			let id_room_pair = Object.keys(socket.rooms); // [ <socket.id>, 'room 237' ]
+// 			USER_INFO[id_room_pair[0].substring(8,id_room_pair[0].length)] = [id_room_pair[1], 'd'];    //'d' is dj
+// 			for (x in USER_INFO){console.log(`dj info ${x} in room: ${USER_INFO[x]}`)}; // actual info
 			
-			current_room = USER_INFO[socket.id.substring(8,socket.id.length)][0];
+// 			current_room = USER_INFO[socket.id.substring(8,socket.id.length)][0];
 			
-		})
-		console.log(`A new DJ is creating a room and join ${current_room}`);
+// 		})
+// 		console.log(`A new DJ is creating a room and join ${current_room}`);
 		
-		socket.emit('say', `hello, you joined ${current_room}`)
-	});
+// 		socket.emit('say', `hello, you joined ${current_room}`)
+// 	});
 
-	//client only join room
-	socket.on('new client', (room)=>{
-		socket.join(room,  () => {
-			let id_room_pair = Object.keys(socket.rooms); // [ <socket.id>, 'room 237' ]
-			USER_INFO[id_room_pair[0].substring(8,id_room_pair[0].length)] = [id_room_pair[1], 'c'];
-			for (x in USER_INFO){console.log(`client info ${x} in room: ${USER_INFO[x]}`)}; // actual info
+// 	//client only join room
+// 	socket.on('new client', (room)=>{
+// 		socket.join(room,  () => {
+// 			let id_room_pair = Object.keys(socket.rooms); // [ <socket.id>, 'room 237' ]
+// 			USER_INFO[id_room_pair[0].substring(8,id_room_pair[0].length)] = [id_room_pair[1], 'c'];
+// 			for (x in USER_INFO){console.log(`client info ${x} in room: ${USER_INFO[x]}`)}; // actual info
 			
-			current_room = USER_INFO[socket.id.substring(8,socket.id.length)][0];
+// 			current_room = USER_INFO[socket.id.substring(8,socket.id.length)][0];
 
-			console.log('here is '+ current_room)
-		})
-	})
-});
+// 			console.log('here is '+ current_room)
+// 		})
+// 	})
+// });
 
 // Passport session setup.
 //   To support persistent login sessions, Passport needs to be able to
@@ -424,6 +425,39 @@ app.post('/addtrack', (req, res) =>{
     })
 
   });
+
+  app.delete('/deletetrack', (req, res) =>{
+    let user_id = req.user.id; 
+    //uris is equal to key of value of event.currentTarget...
+    let uri = req.body.uris;
+   //playlist_id is not stored in redis yet 
+    //client - redis - get playlist id info
+    client.get("New Playlist", (err, data1) =>{
+   //auth and content-type required
+      client.get(user_id, (err, data2)=>{
+          console.log(data2); 
+          if(err) {
+            return console.log(err);
+          }
+          axios({
+            method:"DELETE",
+            url: `https://api.spotify.com/v1/users/${user_id}/playlists/${data1}/tracks`,
+            headers:{Authorization: "Bearer "+ data2},
+            contentType: 'application/json',
+            //optional to pass uris and position 
+            //here we put song_id to be added to playlist_id 
+            data:{"tracks":[{uri}]}
+  
+          }).then(function(response){
+              
+            res.json({"snapshotId":response.snapshot_id})
+  
+           }).catch((err) =>console.log('track adding error occurs',err))
+        })
+  
+      })
+  
+    });
 
   app.get('/listtrack', (req, res) =>{
       let user_id = req.user.id; //get access token value stored in redis 

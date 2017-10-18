@@ -1,4 +1,4 @@
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
 <div class="modal fade" id="DJ_in">
 	<div class="modal-dialog" role="document">
 		<div class="modal-content">
@@ -74,34 +74,34 @@
             </div>
 
      </div>
-
+     <div id='control'>
         <div id ="playlist">
         
-        <h4>Your playlist name:{{name}}</h4>
+        <h4>YOUR PLAYLIST NAME:{{name}}</h4>
         <h5>Your sportify playlistID:{{listid}}
         <br>Your selected songs are shown below</h5>
         <h5 id="list_ofSongs"></h5>
       
         </div>
-    
+    </div>
+
     <div id='control'>
 
         <h3>Step 4: Now you can control your song!</h3>
         <h5 id=error></h5>
-
         <button id=playbutton><h3>RESUME</h3></button> <br>
-        <button id=pausebutton><h3>PAUSE</h3></button>
-        <button id=syncDJ><h3>sync DJ</h3></button> <br>
-        <button id=syncParty><h3>sync Party</h3></button> <br>
+        <button id=pausebutton><h3>PAUSE</h3></button><br>
+        <button id=syncDJ><h3>SYNC DJ</h3></button> <br>
+        <button id=syncParty><h3>SYNC Party</h3></button> <br>
 
+        <div id= "socket"> </div>
 
-
-            <div id= "socket"> </div>
-            {{!-- <form action="seek" method="post"> --}}
-            <input class ="seeking" type="text" name="seek_position" placeholder="enter time in milisecond" />
+        
+         {{!-- <form action="seek" method="post"> --}}
+          <input class ="seeking" type="text" name="seek_position" placeholder="enter time in milisecond" />
             {{!-- </form> --}}
-            <button id='seekposition_btn' ><h3>SEEK POSITION</h3></button>
-            <p>Your song is now playing at </p> <p id= "search_result"> {{position}} </p> <p>miliseconds</p>
+          <button id='seekposition_btn' ><h3>SEEK POSITION</h3></button>
+          <p>Your song is now playing at </p> <p id= "search_result"> {{position}} </p> <p>miliseconds</p>
             
     </div>    
 
