@@ -1,0 +1,46 @@
+<h2>
+    <div><a href="/">Home</a> </div>
+
+</h2>
+
+<h1>Join a party to listen to music now! </h1>
+
+
+<div class='flex'>
+
+
+    <div id ="playlist">
+        
+        <h4>Your playlist name:{{name}}</h4>
+        <h5>Your sportify playlistID:{{listid}}
+        <br>Your selected songs are shown below</h5>
+        <h5 id="list_ofSongs"></h5>
+      
+    </div>
+    
+    <div id='control'>
+        
+        
+        <button id=getplaylist><h3>GET playlist</h3></button> <br>
+    
+        
+            <form action="getplaylist" method="post">
+                <input type="text" name="get_playlist" placeholder="enter your friend'susername" />
+                <input type="submit" name="Get playlist" value="getplaylist">
+            </form>
+            <p>You are now playing  {{name}}'s playlist!</p>
+    </div>    
+    
+    <div id ="playlist">
+    
+        <h5 id="list_ofSongs"></h5>
+      
+    </div>
+    
+
+</div>
+
+
+<script src="https://code.jquery.com/jquery-3.2.1.min.js"integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="crossorigin="anonymous"></script>
+
+<script src="./sf_ct_socket.js"></script>
