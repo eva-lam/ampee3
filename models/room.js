@@ -1,10 +1,7 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
-  var ytlist = sequelize.define('ytlist', {
-    YT_video_id: DataTypes.STRING,
-    YT_title: DataTypes.STRING,
-    YT_video_thumbnailurl: DataTypes.STRING,
-    YT_video_duration: DataTypes.STRING,
+  var room = sequelize.define('room', {
+    //number: DataTypes.INTEGER,
     DJ_room: DataTypes.STRING
   }, {
     classMethods: {
@@ -13,5 +10,5 @@ module.exports = (sequelize, DataTypes) => {
       }
     }
   });
-  return ytlist;
+  return room;
 };

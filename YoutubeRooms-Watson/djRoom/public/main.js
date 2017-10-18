@@ -1,14 +1,6 @@
 const API_KEY = 'AIzaSyCc978T5frQ3BZzn7CXoUuLaZfTJi2UjOE'
 
-function tplawesome(e, t) {
-	res = e;
-	for (var n = 0; n < t.length; n++) {
-		res = res.replace(/\{\{(.*?)\}\}/g, function (e, r) {
-			return t[n][r]
-		})
-	}
-	return res
-}
+function tplawesome(e, t) {res = e; for (var n = 0; n < t.length; n++) {res = res.replace(/\{\{(.*?)\}\}/g, function (e, r) {return t[n][r]})}return res}
 
 // search-res-container: search and render song info into search result container
 $(function () {
@@ -28,19 +20,19 @@ $(function () {
 			var res = response.result
 			// console.log(res)
 			$('#search-result').html('')
-			$.each(res.items, function (index, item) {
+			$.each(res.items, function(index, item) {
 				askDurationOfVideo(item.id.videoId, function(duration){
 					var thumbnailUrl = item.snippet.thumbnails.default.url
 					// console.log(`thumbnail url of ${index} video ${thumbnailUrl}`)
 					$.get("partial-html/videos-on-search-result.html", function (data) {
 						$("#search-result").append(tplawesome(
-								data, [{
-									"title": item.snippet.title,
-									"videoID": item.id.videoId,
-									"thumbnailUrl": thumbnailUrl,
-									"duration": convertTime(duration),
-								}]
-							))
+							data, [{
+								"title": item.snippet.title,
+								"videoID": item.id.videoId,
+								"thumbnailUrl": thumbnailUrl,
+								"duration": convertTime(duration),
+							}]
+						))
 					})
 				})
 			})
@@ -48,27 +40,33 @@ $(function () {
 	})
 })
 
+
 // playlist: render song detail into playlist
 $(function () { 
 	var socket = io(); 
 	//take the message from from when submit are click
 	$('body').delegate('.addSongBtn', 'click',function(){
-			var videoID = $(this).parent().attr('id')
-			if(!videoID) throw new Error('cannot get video id')
-			var videoTitle = $(`#${videoID} .title`).text()
-			console.log(`A video is added into playlist. ID: ${videoID} title:${videoTitle} `)
-			socket.emit('sendSongToPlaylist', videoID, videoTitle)
+		var roomID = 'watson' // assing a string for testing
+		var videoID = $(this).parent().attr('id')
+		if(!videoID) throw new Error('cannot get video id')
+		var videoTitle = $(`#${videoID} .title`).text()
+		var thumbnailUrl = $(`#${videoID} .thumbnail`).attr('src')
+		var duration = $(`#${videoID} .duration`).text()
+		console.log(`A video is added into DB of ${roomID}'s room. videoID: ${videoID} title:${videoTitle} thumbnailUrl: ${thumbnailUrl} duration: ${duration}`)
+		socket.emit('sendSongToDB', videoID, videoTitle, thumbnailUrl, duration, roomID)
 	})
-	socket.on('addSongToPlaylist', (videoID, videoTitle)=>{
-		console.log(`${videoID} and ${videoTitle}`)
-		$.get("partial-html/videos-on-playlist.html", function(data){
+	socket.on('addSongToPlaylist', (videoID, videoTitle, thumbnailUrl, duration)=>{
+		console.log(`Playlist successfully receive: id: ${videoID}  title: ${videoTitle} thumbnail:${thumbnailUrl} and duration: ${duration}`)
+		$.get("partial-html/videos-on-playlist.html", function(template){
 			$("#playlist").append(tplawesome(
-					data, [{
-						"title": videoTitle,
-						"videoID": videoID
-					}]
-				))
-		console.log(`supposed that ${videoTitle} is added into the playlist`)
+				template, [{
+					"title": videoTitle,
+					"videoID": videoID,
+					"duration": duration
+				}]
+			))
+		}).then(()=>{
+			console.log(` ${videoTitle} is added into the playlist`)
 		})
 	})
 })
@@ -129,3 +127,4 @@ function init() {
 		// yt api is ready
 	});
 }
+
