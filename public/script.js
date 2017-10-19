@@ -32,6 +32,9 @@ $("#play_button").click(function(){
 			//"#friends refers to id in css
 			$("#error").html( "You might need to be a premium member to access this feature" );
 			}
+		})
+
+		setTimeout(function() {
 			$.ajax({
 				type: 'GET',
 				url: '/syncDJ',
@@ -43,7 +46,8 @@ $("#play_button").click(function(){
 					socket.emit('sf_play', Date.now(), data)
 					console.log(`emitted the first date time: ${Date.now()}`)
 		
-			})
+		}, 2000);
+
 							
 		})
 			
