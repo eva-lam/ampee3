@@ -2,8 +2,8 @@ function tplawesome(e, t) {res = e; for (var n = 0; n < t.length; n++) {res = re
 
 $(function(){
 	// mute autoplay video for user better select the room they want to go
-	// var myVideo = iframe.getElementsByClass('currSong'); 
-	// myVideo.mute();
+	var video =  iframe.getElementsByClass('currSong'); 
+	video.mute();
 
 	
 	$('#refreshBtn').on('click', function(){
