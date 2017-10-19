@@ -21,18 +21,17 @@ $("#name_submission").click(function(event){
 
 $("#play_button").click(function(){
 	//ajax
-	$.when($.ajax({
+	$.ajax({
         type: 'GET',
-        url: '/play',
-		})
-		//.then(function(data){
-		//	if ( data != null ) {
+		url: '/play',
+		async: false
+		}).done(function(data){
+			if ( data != null ) {
 			//DOM manipulation ""->refers to tag on html
 			//".friends" refers to class in css
 			//"#friends refers to id in css
-			//$("#error").html( "You might need to be a premium member to access this feature" );
-			//}
-		,	
+			$("#error").html( "You might need to be a premium member to access this feature" );
+			}
 			$.ajax({
 				type: 'GET',
 				url: '/syncDJ',
@@ -41,15 +40,20 @@ $("#play_button").click(function(){
 					if (data != null) {
 					$("#error").html( "You might need to be a premium member to access this feature" );  
 					}
-			})).then(()=>{
-				socket.emit('sf_play', Date.now(), data)
-				console.log(`emitted the first date time: ${Date.now()}`)
-
+					socket.emit('sf_play', Date.now(), data)
+					console.log(`emitted the first date time: ${Date.now()}`)
+		
 			})
+							
+		})
 			
 	});
+
+function callsync(){
 	
-//})
+}
+	
+
 
 $("#pause_button").click(function(){
 	$.ajax({
