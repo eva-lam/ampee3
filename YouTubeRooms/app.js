@@ -72,7 +72,7 @@ io.on('connection', (socket)=>{
         console.log(`A new DJ is creating a room and join ${current_room}`);
         
         socket.emit('say', `hello, you joined ${current_room}`)
-    });
+    })
 
     //client only join room
     socket.on('new client', (room)=>{
@@ -92,7 +92,7 @@ io.on('connection', (socket)=>{
         
         console.log(`DJ is trying to send this to client ${msg}`)
         io.to(current_room).emit('VIDEO',msg);
-    });
+    })
 
     //console.log(`A client is connected from Chrome. Total list ${CLIENT_ID.length}`);
     socket.on('disconnect', ()=>{
@@ -121,7 +121,7 @@ io.on('connection', (socket)=>{
         console.log(`a client start/restart playing: ${msg}`)
         io.to(current_room).emit('FIRE',msg);
         
-    }); 
+    })
 
     socket.on('audiReqPlaylist', (roomID)=>{
         console.log(`e:audiReqPlaylist is working, requesting all songs of ${roomID}'s room `)
@@ -140,7 +140,7 @@ io.on('connection', (socket)=>{
     })
     
 
-    socket.on('addSongToPlaylist', (videoID, videoTitle, thumbnailUrl, duration, DJ_room) => {
+    socket.on('sendSongToDB', (videoID, videoTitle, thumbnailUrl, duration, DJ_room) => {
 		console.log('running sendSongToDB')
         AM3_YTlist.create({
             YT_video_id: videoID,
@@ -165,8 +165,43 @@ io.on('connection', (socket)=>{
 
     })
 
+    socket.on('removeSongThatIsDone', (roomID, videoID)=>{
+        console.log(`running e:removeSongThatIsDone with roomID ${roomID} and videoID ${videoID}`)
+        AM3_YTlist.findOne({
+            where: {
+                DJ_room: roomID, 
+                YT_video_id: videoID
+            }
+        }).then((data)=>{
+            if (data) {
+                console.log('found the song that is done. It is indexed at ' + data.id + ' in DB')
+            }else{
+                console.log('failed to find the song')
+            }
+            AM3_YTlist.destroy({
+                where: {
+                    id: data.id
+                }
+            }).then(()=>{
+                console.log(`${videoID} is removed from DB. Now collecting songs left in DB`)
+                AM3_YTlist.findAll({
+                    where: {
+                        DJ_room: roomID, 
+                    }
+                }).then((data)=>{
+                    console.log(`${roomID} still has ${data.length} song(s)`)
+                    for (var song in data){socket.emit('addSongToPlaylist',song)}
+                    }).then(()=>{
+                        console.log(`all songs of ${roomID} left in DB have been sent to client-side to append into #playlist div`)
+                        socket.emit('nextSong')
+                    })
+        
+            })
+        })
+    })
+
     socket.on('findingAllRooms', function(){
-        console.log('room numbers = dj numbers. then search who are dj in USER_INFO(obj)')
+        console.log('search who are dj in USER_INFO(obj)')
         console.log(USER_INFO)
         for(var user in USER_INFO){
             var user = USER_INFO[user]
@@ -186,15 +221,4 @@ io.on('connection', (socket)=>{
 
 })
 
-http.listen(8000, () => { console.log('server is on. Port: 8000, for DJ room'); });
-
-// test
-// AM3_User.findAll().then((data)=>{
-//     // console.log(data)
-// });
-// AM3_YTlist.findAll().then((data)=>{
-//     // console.log(data)
-// });
-// AM3_SFlist.findAll().then((data)=>{
-//     // console.log(data)
-// });
+http.listen(8000, () => { console.log('server is on. Port: 8000, for DJ room'); })

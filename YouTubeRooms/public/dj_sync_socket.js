@@ -31,7 +31,7 @@ $(document).ready(() => {
 })
 
 // 2. This code loads the IFrame Player API code asynchronously.
-var v_url = 'T4SimnaiktU';
+var v_url = 'JmGSCIy7-kk';
 var tag = document.createElement('script');
 
 tag.src = "https://www.youtube.com/iframe_api";
@@ -131,6 +131,7 @@ function fire_client() {
 // }, 1000)
 
 //dj stop, client stop also
+
 function onPlayerStateChange(e) {
     console.log(e)
     if (e.data === 1) {
@@ -140,6 +141,16 @@ function onPlayerStateChange(e) {
     if (e.data === 2) {
         socket.emit('chat message', 'STOP')
     }
+        
+    if(e.data === 0) {     
+        $('#playlist').html('')
+        console.log('A song is done')
+        var roomID = $('.roomInfo').attr('roomID')
+        var videoID = player.getVideoData()['video_id']
+        console.log('prepare data to remove it from DB. roomID: ' + roomID + ' videoId: ' + videoID)     
+        socket.emit('removeSongThatIsDone', roomID, videoID)
+    }
+
 
 }
 
@@ -155,6 +166,7 @@ socket.on('addSongToPlaylist', (videoID, videoTitle, thumbnailUrl, duration, roo
             }]
         ))
     }).then(()=>{
+        console.log('e:addSongToPlaylist is done')
         console.log(` ${videoTitle} is added into the playlist`)
     })
 })

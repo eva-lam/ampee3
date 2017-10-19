@@ -55,11 +55,11 @@ $(function () {
 		var duration = $(`#${videoID} .duration`).text()
 		// emit 
 		socket.emit(
-			'addSongToPlaylist',
+			'sendSongToDB',
 			videoID, videoTitle, thumbnailUrl, duration, roomID,
 		)
 		socket.emit('djRoom', videoID)
-			console.log(`A video is added into DB of ${roomID}'s room. videoID: ${videoID} title:${videoTitle} thumbnailUrl: ${thumbnailUrl} duration: ${duration}`)
+		console.log(`A video is added into DB of ${roomID}'s room. videoID: ${videoID} title:${videoTitle} thumbnailUrl: ${thumbnailUrl} duration: ${duration}`)
 	
 		// //kevin: play video after list created	
 		// player.cueVideoById(videoID)
