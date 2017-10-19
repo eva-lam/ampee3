@@ -1,5 +1,5 @@
 var DJsync = require('./app.js').DJsync
-var syncParty = require('.app.js').syncParty
+var syncParty = require('./app.js').syncParty
 
 module.exports = function (http, client, USER_INFO) {
     const ioo = require('socket.io')(http);
