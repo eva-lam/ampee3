@@ -33,16 +33,8 @@ $("#play_button").click(function(){
 			}
 
 			
-		});
+		
 
-		client.get(user_id, (err, data) =>{
-			if(err || data == null) {
-				//if account data doesn't exist, will get GithubData 
-				getSpotifydata(user_id, res);
-			} else {
-				//if data exists, would just send back the data 
-				res.send(data);
-			}
 
 			socket.emit('sf_play', Date.now(), user_id)
 			console.log(`emitted the first date time: ${Date.now()}, id: ${user_id}`)
@@ -61,15 +53,17 @@ $("#pause_button").click(function(){
 })
 
 $("#sync_dj").click(function(){
-	// $.ajax({
-    //     type: 'GET',
-	// 	url: '/syncDJ',
-	// 	data: {}
-	// 	}).done(function( data ) {
-	// 		if (data != null) {
-	// 		$("#error").html( "You might need to be a premium member to access this feature" );  
-	// 		}
-	// 	});
+	$.ajax({
+        type: 'GET',
+		url: '/syncDJ',
+		data: {}
+		}).done(function( data ) {
+			if (data != null) {
+			$("#error").html( "You might need to be a premium member to access this feature" );  
+			}
+			socket.emit('sf_play', Date.now())
+			console.log(`emitted the first date time: ${Date.now()}`)
+		});
 })
 
 $("#sync_party").click(function(){
