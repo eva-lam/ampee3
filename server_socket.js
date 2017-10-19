@@ -25,7 +25,7 @@ module.exports = function (http, client, USER_INFO) {
             })
             console.log(`A new DJ is creating a room and join ${current_room} in ${program}`);
 
-            socket.emit('say', `hello, you joined ${current_room}`)
+            socket.to(current_room).emit('say', `hello, you joined ${current_room}`)
 
         });
 
@@ -57,7 +57,6 @@ module.exports = function (http, client, USER_INFO) {
         socket.on('disconnect', () => {
             console.log(`DJ: ${socket.id.substring(8, socket.id.length)} is gone from Chrome. Room: ${USER_INFO[socket.id.substring(8, socket.id.length)]} is closed. Total list ${Object.keys(USER_INFO).length}`)
             delete USER_INFO[socket.id.substring(8, socket.id.length)]
-
 
         })
 
@@ -105,7 +104,7 @@ module.exports = function (http, client, USER_INFO) {
                 data.forEach((song, index) => {
                     var title = song.YT_title.slice(0, 15)
                     console.log(`now emit e:addSongToPlaylist for no. ${index+1}: ${title}... into playlist of Audience's browser`)
-                    socket.emit('addSongToPlaylist', song)
+                    socket.to(current_room).emit('addSongToPlaylist', song)
                 })
             })
         })
@@ -157,7 +156,7 @@ module.exports = function (http, client, USER_INFO) {
                     console.log(data)
                     console.log(`${roomID} still has ${data.length} song(s)`)
                     data.forEach((song)=>{
-                        socket.emit(
+                        socket.to(current_room).emit(
                             'addSongToPlaylist',
                             song.YT_video_id,
                             song.YT_title,
@@ -168,7 +167,7 @@ module.exports = function (http, client, USER_INFO) {
                     })
                 }).then(() => {
                     console.log(`all songs of ${roomID} left in DB have been sent to client-side to append into #playlist div`)
-                    socket.emit('nextSong')
+                    socket.to(current_room).emit('nextSong')
                 })
             })
         })
@@ -194,7 +193,7 @@ module.exports = function (http, client, USER_INFO) {
                         }
                     }).then((data) => {
                         var currSongID = data.YT_video_id
-                        socket.emit('buildingRoomBox', roomID, currSongID)
+                        socket.to(current_room).emit('buildingRoomBox', roomID, currSongID)
                     }).then(() => {
                         console.log(`emitted buildingRoomBox for ${roomID}'s room`)
                     })
