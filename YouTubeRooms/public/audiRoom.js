@@ -1,5 +1,6 @@
 $(function(){
 	var socket = io(); 
+	console.log('audiRoom.js is loaded')
 
 	$('#playlistReqBtn').on('click', function(){
 		console.log('playlistReqBtn is clicked')

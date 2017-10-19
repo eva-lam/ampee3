@@ -20,15 +20,23 @@
 	</div>
 </div>
 
-<h2>
-    <div><a href="/">Home</a> 
-	<a href="/account">My account info</a> 
-	 <a href="/logout">Log Out</a> </div>
-</h2>
 
-<h1>WELCOME TO YOUR DJ PAGE</h1>
-<p>This is your ID: {{ user.id }}</p>
-<p>Profile: <a href="{{user.profileUrl}}">{{ user.profileUrl }}</a></p>
+<div id = "top">
+    <button><a href="/"><h3>HOME</h3></a> </button>
+	
+	 <button> <a href="/logout"><h3>LOG OUT</h3></a> </button>
+</div>
+
+
+
+<div>
+        <h1>WELCOME TO YOUR DJ PAGE: </h1>
+        <h2> Create your DJ room now! </h2>
+        <p>Your account info: ID: {{ user.id }}</p>
+        <p>Profile: <a href="{{user.profileUrl}}">{{ user.profileUrl }}</a></p>
+        <h6 id=error></h6>
+</div>
+
 
 <div class='flex'>
     <div id='control'>    
@@ -75,6 +83,7 @@
             </div>
 
      </div>
+
      <div id='control'>
         <div id ="playlist">
         
@@ -82,7 +91,8 @@
         {{!-- <h4>YOUR PLAYLIST NAME:{{name}}</h4> --}}
         
         <h5>Your selected songs are shown below</h5>
-        <h5 id="list_ofSongs"></h5>
+        
+        <h5 id="list_of_songs"></h5>
       
         </div>
     </div>
@@ -90,11 +100,10 @@
     <div id='control'>
 
         <h3>Step 4: Now you can control your song!</h3>
-        <h5 id=error></h5>
-        <button id=playbutton><h3>RESUME</h3></button> <br>
-        <button id=pausebutton><h3>PAUSE</h3></button><br>
-        <button id=syncDJ><h3>SYNC DJ</h3></button> <br>
-        <button id=syncParty><h3>SYNC Party</h3></button> <br>
+        <button id=play_button><h3>RESUME</h3></button> <br>
+        <button id=pause_button><h3>PAUSE</h3></button><br>
+        <button id=sync_dj><h3>SYNC DJ</h3></button> <br>
+        <button id=sync_party><h3>SYNC Party</h3></button> <br>
 
         <div id= "socket"> </div>
 
