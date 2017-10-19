@@ -1,23 +1,36 @@
-<h2>
-    <div><a href="/">Home</a> </div>
+<style>
+    .room-box {
+        min-width: 260;
+        min-height: 300;
+        justify-content: center;
+        align-items: center;
+    }
+</style>
 
-</h2>
+    <h3>Select the Room You Want to Join</h3>
+    <button id="refreshBtn">&#8634;</button>
 
-<h1>Join a party to listen to music now! </h1>
+<div id="allRooms" class="container-fluid"></div>
+
+<script src="https://code.jquery.com/jquery-3.2.1.min.js"integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.slim.js"></script>
+<script src="../djRoom_search_and_playlist.js"></script>
+<script src="../dj_sync_socket.js"></script>
+<script src="../ytSelectRoom.js"></script>
+<script src="https://apis.google.com/js/client.js?onload=init"></script>
+<script src="./sf_ct_socket.js"></script>
 
 
-<div class='flex'>
-
-
-    <div id ="playlist">
+    {{!-- <div id ="playlist">
         
         <h4>Your playlist name:{{name}}</h4>
         <h5>Your sportify playlistID:{{listid}}
         <br>Your selected songs are shown below</h5>
         <h5 id="list_ofSongs"></h5>
       
-    </div>
-    
+    </div> --}}
+{{!--     
     <div id='control'>
         
         
@@ -29,19 +42,21 @@
                 <input type="submit" name="Get playlist" value="getplaylist">
             </form>
             <p>You are now playing  {{name}}'s playlist!</p>
-    </div>    
+    </div>     --}}
     
-    <div id ="playlist">
+    {{!-- <div id ="playlist">
     
         <h5 id="list_ofSongs"></h5>
       
-    </div>
+    </div> --}}
     
     <div id='test'></div>
 
-</div>
 
 
+<<<<<<< HEAD
+
+=======
 <script src="https://code.jquery.com/jquery-3.2.1.min.js"integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.slim.js"></script>
 
@@ -66,3 +81,4 @@
     })
 
 </script>
+>>>>>>> 294d9a4a16d08a26414937129f16136470b37895
