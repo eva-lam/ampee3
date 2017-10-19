@@ -166,7 +166,7 @@ module.exports = function (http, client, USER_INFO) {
                             song.YT_title,
                             song.YT_video_thumbnailurl,
                             song.YT_video_duration,
-                            song.DJ_room,
+                            song.DJ_room
                         )
                     })
                 }).then(() => {
