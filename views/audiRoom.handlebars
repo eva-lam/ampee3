@@ -61,6 +61,7 @@
         function onPlayerReady(event) {
             yt_status = 'NEW'
             socket.emit('chat message', '{{room}}')
+            socket.emit('chat message', 'REQUEST_NOW')
         }
 
         // 5. The API calls this function when the player's state changes.
@@ -87,14 +88,17 @@
     <script>
         var socket = io('/djroom');
         socket.emit('new client', '{{room}}');
-        socket.on('say', (msg)=>{$('h1').html(`<h3 style="color: white">Server say ${msg} </p></h3>`)})
+        //socket.on('say', (msg)=>{$('h1').html(`<h3 style="color: white">Server say ${msg} </p></h3>`)})
 
         socket.on('VIDEO', (msg)=> {
             console.log(`I get this video ${msg}`)
-            v_url = msg;
-            player.pauseVideo();
-            player.cueVideoById(v_url)
-            //socket.emit('chat message', 'REQUEST_NOW')
+
+            if (msg !==  player.getVideoData()['video_id']){
+                player.pauseVideo();
+                player.cueVideoById(msg)
+                socket.emit('chat message', 'REQUEST_NOW')
+            }
+            
 
         });
 
