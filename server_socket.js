@@ -55,9 +55,13 @@ module.exports = function (http, client, USER_INFO) {
 
         //console.log(`A client is connected from Chrome. Total list ${CLIENT_ID.length}`);
         socket.on('disconnect', () => {
+            AM3_YTlist.destroy({
+                where: {
+                    DJ_room: USER_INFO[socket.id.substring(8, socket.id.length)][0]
+                }
+            })
             console.log(`DJ: ${socket.id.substring(8, socket.id.length)} is gone from Chrome. Room: ${USER_INFO[socket.id.substring(8, socket.id.length)]} is closed. Total list ${Object.keys(USER_INFO).length}`)
             delete USER_INFO[socket.id.substring(8, socket.id.length)]
-
         })
 
         //this 1 line will get the chat message from client
