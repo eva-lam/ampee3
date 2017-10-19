@@ -1,12 +1,42 @@
-<h2>
-    <div><a href="/">Home</a> 
-	<a href="/account">My account info</a> 
-	 <a href="/logout">Log Out</a> </div>
-</h2>
 
-<h1>WELCOME TO THE DJ PAGE</h1>
-<p>This is your ID: {{ user.id }}</p>
-<p>Profile: <a href="{{user.profileUrl}}">{{ user.profileUrl }}</a></p>
+<div class="modal fade" id="DJ_in">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+		<div class="modal-header">
+			<h5 class="modal-title">Enter DJ room name</h5>
+			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+				
+			</button>
+		</div>
+		<div class="modal-body">
+			<h3>Please enter your room name (No space allow!)</h3>
+			<input id="room_text" value="My-Room"></input><span id="warn"></span>
+		</div>
+		<div class="modal-footer">
+			<button type="button" id="room_name" class="btn btn-primary">Launch My Room!</button>
+			<a href='/'><button type="button" class="btn btn-secondary">Later...</button></a>
+		</div>
+		</div>
+	</div>
+</div>
+
+
+<div id = "top">
+    <button><a href="/"><h3>HOME</h3></a> </button>
+	
+	 <button> <a href="/logout"><h3>LOG OUT</h3></a> </button>
+</div>
+
+
+
+<div>
+        <h1>WELCOME TO YOUR DJ PAGE: </h1>
+        <h2> Create your DJ room now! </h2>
+        <p>Your account info: ID: {{ user.id }}</p>
+        <p>Profile: <a href="{{user.profileUrl}}">{{ user.profileUrl }}</a></p>
+        <h6 id=error></h6>
+</div>
+
 
 <div class='flex'>
     <div id='control'>    
@@ -16,16 +46,18 @@
         {{!-- action refers to route name  --}}
         <form action="createplaylist" method="post"> 
             {{!-- playlist_name goes after 'req.body' --}}
-            <input  type="text" name="playlist_name" placeholder="name your playlist" />
-            <input type="submit" name="create" value="create">
+            <input id="playlist_creation" type="text" name="playlist_name" placeholder="name your playlist" />
+            <input id="name_submission" type="submit" name="create" value="create">
         </form>
-
+        <h3 id="error_name"></h3>
         <br>
+        
         <h3>Step 2: Search track and add track to your playlist!</h3>
-        <form action="searchtrack" class="searching" method="post">
-            <input type="text" name="search_track" placeholder="search for track" />
-            <input type="submit" name="search" value="search">
-        </form>
+        {{!-- <form action="searchtrack" class="searching" method="post"> --}}
+         <input class ="initial_search" type="text" name="search_track" placeholder="search for track" />
+         <button id='search_btn' ><h3>SEARCH</h3></button>
+        {{!-- <input type="submit" name="search" value="search"> --}}
+        {{!-- </form> --}}
 
        
     </div>
@@ -33,56 +65,93 @@
 
     <div id="control">
             <h3>Step 3: click below to add tracks</h3> 
-            
-        {{#each songlist}}
 
-        {{!-- <form action="addtrack" method="post">
+            <div class ="result">      
+                 {{#each songlist}}
+
+        {{!--anotherway to use form  <form action="addtrack" method="post">
             <input type="text" name="song_name" placeholder="search for track" />
             <input type="submit" name="search" value="search">
         </form> --}}
-                   <div class ="result"> 
-                       <span>
+                       {{!-- <span>
                             {{name}} {{uri}} 
                             <br>{{song_id}}
-                        </span>
-                        <button class="song" value="{{uri}}">add</button>
-                    </div>
-        {{/each}}
+                        </span> --}}
+                        {{!-- <button class="song" value="{{uri}}">add</button> --}}
+                {{/each}}
+                
+            </div>
 
-    </div>
+     </div>
 
-    <div id ="playlist">
+     <div id='control'>
+        <div id ="playlist">
         
-        <h4>Your playlist name:{{name}}</h4>
-        <h5>Your sportify playlistID:{{listid}}
-        <br>Your selected songs are shown below</h5>
-        <h5 id="list_ofSongs"></h5>
+        <div id = "named_playlist"></div>
+        {{!-- <h4>YOUR PLAYLIST NAME:{{name}}</h4> --}}
+        
+        <h5>Your selected songs are shown below</h5>
+        
+        <h5 id="list_of_songs"></h5>
       
+        </div>
     </div>
-    
+
     <div id='control'>
+
         <h3>Step 4: Now you can control your song!</h3>
+        <button id=play_button><h3>RESUME</h3></button> <br>
+        <button id=pause_button><h3>PAUSE</h3></button><br>
+        <button id=sync_dj><h3>SYNC DJ</h3></button> <br>
+        <button id=sync_party><h3>SYNC Party</h3></button> <br>
+
+        <div id= "socket"> </div>
+
         
-        <button id=playbutton><h3>PLAY</h3></button> <br>
-        <h5 id=error></h5>
-        <button id=pausebutton><h3>PAUSE</h3></button>
-        <h3></h3>
-        <br>
-        
-            <form action="seek" method="post">
-                <input type="text" name="seek_position" placeholder="enter time in milisecond" />
-                <input type="submit" name="playtime" value="Seekposition">
-            </form>
-            <p>Your song is now playing at {{position}} miliseconds</p>
+         {{!-- <form action="seek" method="post"> --}}
+          <input class ="seeking" type="text" name="seek_position" placeholder="enter time in milisecond" />
+            {{!-- </form> --}}
+          <button id='seekposition_btn' ><h3>SEEK POSITION</h3></button>
+          <p>Your song is now playing at </p> <p id= "search_result"> {{position}} </p> <p>miliseconds</p>
+            
     </div>    
 
 </div>
 
+<script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+{{!-- <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script> --}}
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js" integrity="sha256-T0Vest3yCU7pafRw9r+settMBX6JkKN06dqBnpQ8d30=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.slim.js"></script>
 
-<script src="https://code.jquery.com/jquery-3.2.1.min.js"integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="crossorigin="anonymous"></script>
-{{!-- <script>
-    
-    $('.result').on('click','.song',()=>{
-        $('#list_ofSongs').append("<h5>{{name}}</h5>")})
-        
-</script> --}}
+<script>
+    //define socket io at the begining
+    var socket;
+
+    $(document).ready(() => {
+      $('#DJ_in').modal({
+        backdrop: 'static',
+        keyboard: false,
+        show: true
+      })
+
+      var room_title; //setup room name
+      $('#room_name').on('click', () => {
+        if ($('#room_text').val() != '') {
+          room_title = $('#room_text').val();
+          console.log(room_title)
+          $('#DJ_in').modal('hide');
+          
+          //start the socket after confirmed
+          socket = io('/djroom');
+          socket.emit('new room', room_title, "sportify");
+
+        } else {
+          $('#warn').css('color', 'red').text('Please enter a room name')
+
+        }
+      })
+    })
+  </script>
+
+{{!-- <script src="./sf_dj_socket.js"></script> --}}
