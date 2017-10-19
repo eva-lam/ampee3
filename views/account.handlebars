@@ -21,41 +21,43 @@
 </div>
 
 
-<div id = "top">
-    <button><a href="/"><h3>HOME</h3></a> </button>
-	
-	 <button> <a href="/logout"><h3>LOG OUT</h3></a> </button>
-</div>
 
+ <div class ="login_div">
+         <h2 class ="size30">
+         <a href="/">HOME</a> 
+         <a href="/logout">LOG OUT</a>
+        </h2>
+    </div>
 
+<br>
 
 <div>
-        <h1>WELCOME TO YOUR DJ PAGE: </h1>
-        <h2> Create your DJ room now! </h2>
-        <p>Your account info: ID: {{ user.id }}</p>
-        <p>Profile: <a href="{{user.profileUrl}}">{{ user.profileUrl }}</a></p>
+        <h1>WELCOME TO YOUR DJ PAGE: </h1><br>
+        <h2 class ="normal">Create your DJ room now! </h2> <br>
+        <p class ="info">Your account info: ID: {{ user.id }}</p>
+        <p class="info">Profile: <a href="{{user.profileUrl}}">{{ user.profileUrl }}</a></p>
         <h6 id=error></h6>
+        <br>
 </div>
-
+<br>
 
 <div class='flex'>
     <div id='control'>    
-        <br>
-    
-        <h3>Step 1: Create your DJ playlist now!</h3>
+       <br>
+        <p>Step 1: Create your DJ playlist now!</p>
         {{!-- action refers to route name  --}}
         <form action="createplaylist" method="post"> 
             {{!-- playlist_name goes after 'req.body' --}}
             <input id="playlist_creation" type="text" name="playlist_name" placeholder="name your playlist" />
-            <input id="name_submission" type="submit" name="create" value="create">
+            <input id="name_submission" type="submit" name="create" value="CREATE">
         </form>
         <h3 id="error_name"></h3>
         <br>
-        
-        <h3>Step 2: Search track and add track to your playlist!</h3>
+        <br>
+        <p>Step 2: Search track and add track to your playlist!</p>
         {{!-- <form action="searchtrack" class="searching" method="post"> --}}
          <input class ="initial_search" type="text" name="search_track" placeholder="search for track" />
-         <button id='search_btn' ><h3>SEARCH</h3></button>
+         <button id='search_btn' ><h4 class="searchbtn">SEARCH</h4></button>
         {{!-- <input type="submit" name="search" value="search"> --}}
         {{!-- </form> --}}
 
@@ -64,7 +66,8 @@
     
 
     <div id="control">
-            <h3>Step 3: click below to add tracks</h3> 
+           <br>
+            <p>Step 3: click below to add tracks</p> 
 
             <div class ="result">      
                  {{#each songlist}}
@@ -89,8 +92,8 @@
         
         <div id = "named_playlist"></div>
         {{!-- <h4>YOUR PLAYLIST NAME:{{name}}</h4> --}}
-        
-        <h5>Your selected songs are shown below</h5>
+        <br>
+        <p>Your selected songs are shown below</p>
         
         <h5 id="list_of_songs"></h5>
       
@@ -98,12 +101,12 @@
     </div>
 
     <div id='control'>
-
-        <h3>Step 4: Now you can control your song!</h3>
-        <button id=play_button><h3>RESUME</h3></button> <br>
-        <button id=pause_button><h3>PAUSE</h3></button><br>
-        <button id=sync_dj><h3>SYNC DJ</h3></button> <br>
-        <button id=sync_party><h3>SYNC Party</h3></button> <br>
+        <br>
+        <p>Step 4: Now you can control your song!</p><br>
+        <button id=play_button><p>RESUME</p></button> <br>
+        <button id=pause_button><p>PAUSE</p></button><br>
+        <button id=sync_dj><p>SYNC DJ</p></button> <br>
+        <button id=sync_party><p>SYNC Party</p></button> <br>
 
         <div id= "socket"> </div>
 
@@ -111,7 +114,7 @@
          {{!-- <form action="seek" method="post"> --}}
           <input class ="seeking" type="text" name="seek_position" placeholder="enter time in milisecond" />
             {{!-- </form> --}}
-          <button id='seekposition_btn' ><h3>SEEK POSITION</h3></button>
+          <button id='seekposition_btn' ><p>SEEK POSITION</p></button>
           <p>Your song is now playing at </p> <p id= "search_result"> {{position}} </p> <p>miliseconds</p>
             
     </div>    

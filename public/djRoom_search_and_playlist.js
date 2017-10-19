@@ -13,7 +13,8 @@ $(function () {
 			type: 'video',
 			q: encodeURIComponent($('#searchKeyword').val().replace(/&20/g), '+'),
 			maxResult: 10,
-			order: 'viewCount'
+			order: 'viewCount',
+			videoEmbeddable: 'true'
 		})
 		// execute the request
 		request.execute((response) => {
