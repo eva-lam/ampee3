@@ -1,5 +1,5 @@
-var DJsync = require('./app.js').DJsync
-var syncParty = require('./app.js').syncParty
+var main_app = require('./app.js')
+
 
 module.exports = function (http, client, USER_INFO) {
     const ioo = require('socket.io')(http);
@@ -83,9 +83,9 @@ module.exports = function (http, client, USER_INFO) {
 
         socket.on('sf_play', (date_info) => {
             console.log(`Sportify press DJ Resume/Play. Time: ${date_info}`)
-            DJsync().then((dj_date_info)=>{
+            main_app.DJsync().then((dj_date_info)=>{
                 lagtime = dj_data_info - dateinfo
-                syncParty(lagtime)
+                main_app.syncParty(lagtime)
             })
             io.to(current_room).emit('sf', 'confirmed a connection');
         })
