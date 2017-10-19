@@ -144,12 +144,18 @@ app.get('/rooms',function(req,res){
   res.render('rooms')
 });
 
-app.get('/account', ensureAuthenticated, function(req, res){
-  res.render('account', { user: req.user });
+// app.get('/account', ensureAuthenticated, function(req, res){
+//   res.render('account', { user: req.user });
+// });
+
+//for testing purpose only
+app.get('/account', function(req, res){
+  res.render('account');
 });
 
 app.get('/login', function(req, res){
-  res.render('login', { user: req.user });
+  //res.render('login', { user: req.user });
+  res.render('choose');  //kevin temp use
 });
 
 
@@ -181,15 +187,15 @@ app.get('/choose',function(req,res){
   const room_sp = [[]];
   
       for (var x in USER_INFO){ 
-          
+      
           if(USER_INFO[x][1] === 'd'){
-            if (USER_INFO[x][1] === 'sportify'){
-              room_yt.push([USER_INFO[x][0], x])}
-            else 
+            if (USER_INFO[x][2] === 'sportify'){
               room_sp.push([USER_INFO[x][0], x])}
+            else {
+              room_yt.push([USER_INFO[x][0], x])}
           }
-
-          console.log(`rooms in server: ${room_yt, room_sp}`)
+      }
+          
       
   
   res.render('choose', {yt: room_yt, sp: room_sp})
@@ -200,9 +206,20 @@ app.get('/dj/:id', (req, res)=>{
   if((req.params.id) === ''){
       res.send("you are going to room of nothing :(")
   }else{
-      console.log("here is /dj")
-      res.render('audiRoom', {room: req.params.id})
-  }
+      for (var x in USER_INFO){
+        if(req.params.id === USER_INFO[x][0]){
+          
+          if(USER_INFO[x][2]=== 'sportify'){
+            
+          res.render('joinparty', {room: req.params.id})
+          }else{
+          res.render('audiRoom', {room: req.params.id})
+          }
+        }
+      }
+    }
+      
+  
 });
 
 
@@ -214,27 +231,38 @@ app.get('/logout', function(req, res){
 });
 
 //get DJ playback information
-let current_position;
-let current_track;
+var current_position;
+var current_track_id;
+var current_track_name;
+var current_album_art;
+var current_track_isPlaying;
+var current_track_artist;
+var current_track_duration;
 
 app.get('/syncDJ', function(req, res){
   	const user_id = req.user.id;
   	client.get(user_id, (err,data) => {
 		axios({
 			method: "GET",
-			url: `https://api.spotify.com/v1/me/player`,
+			url: `https://api.spotify.com/v1/me/player/currently-playing`,
 			headers: {Authorization: "Bearer " + data},
 		})
 		.then(function(response){
 			current_position = response.data.progress_ms;
-			current_track = response.data.item.id;
-			console.log("current playback information grabbed!")
-      console.log(current_position);
-      res.json(null) 
+      current_track_id = response.data.item.id;
+      current_track_name = response.data.item.name;
+			current_album_art = response.data.item.album.images[0].url;
+			current_track_duration = response.data.item.duration;
+			current_track_artist = response.data.item.artists[0].name;
+			current_track_isPlaying = response.data.item.is_playing;
+
+			console.log("current playback information grabbed!");
+      res.json({"songName": current_track_name, "songArt": current_album_art, "songPosition": current_position, "songDuration": current_track_duration, "songArtist": current_track_artist, "songIsPlaying": current_track_isPlaying});
 		})
 		.catch((err) => console.log('error occurred', err))
  	 })
 })
+
 
 //sync with the same song as DJ
 app.get('/syncParty', function(req, res){

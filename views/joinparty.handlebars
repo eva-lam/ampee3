@@ -37,10 +37,17 @@
       
     </div>
     
+    <div id='test'></div>
 
 </div>
 
 
 <script src="https://code.jquery.com/jquery-3.2.1.min.js"integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.slim.js"></script>
-<script src="./sf_ct_socket.js"></script>
+
+<script>
+    var socket = io('/djroom');
+    socket.emit('new client', '{{room}}', "sportify");
+    socket.on('say', (msg)=>{$('#test').append(`<h3 style="color: white">Server say ${msg} </p></h3>`)})
+
+</script>
