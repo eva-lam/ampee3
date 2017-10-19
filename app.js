@@ -547,7 +547,7 @@ var current_track_isPlaying;
 var current_track_artist;
 var current_track_duration;
 
-function DJsync(){
+exports.DJsync = function(){
   	const user_id = req.user.id;
   	client.get(user_id, (err,data) => {
 		axios({
@@ -573,7 +573,7 @@ function DJsync(){
 
 
 //sync with the same song as DJ
-function syncParty(lagtime){
+exports.syncParty = function(lagtime){
 	let user_id = req.user.id;
 	client.get(user_id, (err, data) => {
 		axios({

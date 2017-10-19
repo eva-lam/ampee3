@@ -1,3 +1,6 @@
+var DJsync = require('./DJsync')
+var syncParty = require('./syncParty')
+
 module.exports = function (http, client, USER_INFO) {
     const ioo = require('socket.io')(http);
     
