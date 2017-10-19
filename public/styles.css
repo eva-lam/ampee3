@@ -14,8 +14,16 @@
 }
 body {
     background-image: url("Music_background.jpg");
-    background-repeat: no-repeat; 
-    height: 1200px; 
+    height: 1500px; 
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    text-align:center; 
+}
+
+.djroom{
+    background-image: url("DJ_background.jpg");
+    height: 1000px; 
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
@@ -36,21 +44,53 @@ h1 {
     text-align: center;
 }
 
-h2,p,a {
+a {
     color: greenyellow;
     text-align: center;
 }
 
+p{
+    color:purple;
+}
+
+h2{
+    color: yellowgreen;
+    text-align: center;
+}
+
 h3{
-    color: navy;
+    color: skyblue;
     font-size:16px;
     text-align: center;
 }
 
+.djbutton{
+    color:greenyellow; 
+}
+
+.searchbtn{
+    color:black;
+}
+
+.normal{
+    color:skyblue; 
+}
+.info{
+    color:white; 
+}
 #error{
     color: rgb(216, 63, 16);
     font-size:14px;
     text-align: center;
+}
+
+.goSearch{
+    vertical-align:middle;
+    margin:0 2px;
+    display:inline-block;
+    width:16px;
+    height:16px;
+    background-image: url(search.png);      
 }
 h4{
     color:navy;
@@ -72,6 +112,15 @@ h7{
     color:black;
     font-size:12px;
     text-align:center;
+}
+
+.login_div{
+    margin:30px;
+}
+
+.song_title{
+    color:skyblue;
+    font-size:16px;
 }
 #top{
     margin:5px; 
@@ -98,8 +147,14 @@ h7{
 
 #control {
     width: 30%;
-    margin-left: 10px;
-    background-color: darkcyan;
+    margin-left:20px;
+    margin-top:10px;
+    background-color:white;
+    opacity:0.9; 
+    height:1000px;
+    -webkit-border-radius: 24px 20px 20px 20px;
+    -moz-border-radius: 24px 20px 20px 20px;
+    border-radius: 24px 20px 20px 20px;
 }
 
 #create {
@@ -111,10 +166,7 @@ h7{
     background:yellow; 
 }
 
-#playlist {
-    background-color:darkcyan;
-    margin:5px; 
-}
+
 
 input[type=text] {
         width: 100%;
@@ -143,7 +195,8 @@ input[type=text] {
 }
 
 .added{
-    background:darkkhaki;
+    background:skyblue;
+    margin:5px
 }
 
 .delete_btn{
@@ -153,7 +206,7 @@ input[type=text] {
     background-color:gainsboro;
     height:80px;
     width:100px; 
-    margin-left: 5px;
+    margin-left: 10px;
     margin-bottom:5px;
     text-align: center;
 }

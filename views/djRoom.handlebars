@@ -1,6 +1,6 @@
 
-<body style="background-image: url('./djback.jpg')">
-
+{{!-- <body style="background-image: url('./DJ_background.jpg');background"> --}}
+<body class="djroom">
   <div class="modal fade" id="DJ_in">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
@@ -11,12 +11,12 @@
             </button>
         </div>
         <div class="modal-body">
-          <h3>Please enter your room name (No space allow!)</h3>
+          <h3>  Please enter your room name (No space allowed!)</h3><br>
           <input id="room_text" value=''></input><span id="warn"></span>
         </div>
         <div class="modal-footer">
-          <button type="button" id="room_name" class="btn btn-primary">Launch My Room!</button>
-          <a href='/'><button type="button" class="btn btn-secondary">Later...</button></a>
+          <button type="button" id="room_name" class="btn btn-primary">Launch!</button>
+          <a href='/'><button type="button" class="btn btn-secondary">Not Now</button></a>
         </div>
       </div>
     </div>
@@ -24,7 +24,9 @@
 
 
 	<!-- player -->
+	<br>
 	<h1 class='roomInfo' roomID=''></h1>
+	<h2>Search Songs now to put in the DJ list</h2><br>
 	<!-- 1. The <iframe> (and video player) will replace this <div> tag. -->
 	<div id="player"></div>
 
@@ -40,12 +42,15 @@
 	<!-- UI of searching and adding songs -->
 	<div id="controler container-fluid">
 		<div id="playlist-container" class="grid-row col-lg-4 col-md-4 col-sm-4 col-xs-12 bg-two">
-			<h5>Next Song: </h5>
+			<br>
+			<h3 class="size48">Next Song: </h3>
 			<ul id="playlist">
 
 			</ul>
 		</div>
+
 		<div id="search-container" class="grid-row col-lg-8 col-md-8 col-sm-8 col-xs-12 bg-one">
+			<br>
 			<form id=search-box>
 				<input id="searchKeyword" autocomplete="off" placeholder="search" /> <button id="goSearch">&#x1F50D;</button>
 			</form>
