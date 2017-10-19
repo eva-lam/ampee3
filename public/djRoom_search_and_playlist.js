@@ -13,7 +13,8 @@ $(function () {
 			type: 'video',
 			q: encodeURIComponent($('#searchKeyword').val().replace(/&20/g), '+'),
 			maxResult: 10,
-			order: 'viewCount'
+			order: 'viewCount',
+			videoEmbeddable: 'true'
 		})
 		// execute the request
 		request.execute((response) => {
@@ -55,7 +56,7 @@ $(function () {
 		var duration = $(`#${videoID} .duration`).text()
 		// emit 
 		socket.emit(
-			'addSongToPlaylist',
+			'sendSongToDB',
 			videoID, videoTitle, thumbnailUrl, duration, roomID,
 		)
 		socket.emit('djRoom', videoID)

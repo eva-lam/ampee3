@@ -78,30 +78,23 @@ function stopVideo() {
 
 
 socket.on('say', (msg) => {
-    $('h1').html(`<h3 style="color: white">Server say ${msg} </p></h3>`)
+    //$('h1').html(`<h3 style="color: white">Server say ${msg} </p></h3>`)
 })
 
-//take the message from from when submit are click
-// $('#s_bu').on('click', (e) => {
-//     //e.preventDefault();
-//     console.log("here")
-//     if ($('#inbox').val() !== '') {
-
-//         socket.emit('VIDEO', $('#inbox').val())
-//         v_url = $('#inbox').val()
-//         console.log(v_url);
-//         player.cueVideoById(v_url)
-//         player.playVideo();
+//handle next song
+socket.on('nextSong', (song)=>{
+    player.cueVideoById(song)
+    player.playVideo(song)
+    socket.emit('VIDEO', player.getVideoData()['video_id'])
+    socket.emit('chat message', `B${player.getCurrentTime()}D${Date.now()}NEW`)
 
 
-//         //empty the box after send
-//         $('#inbox').val('');
-
-//     }
-// })
+})
 
 socket.on('chat message', (msg) => {
     if (msg === 'REQUEST_NOW') {
+        console.log(`REQUEST_NOW ${player.getVideoData()['video_id']}`)
+        socket.emit('VIDEO', player.getVideoData()['video_id'])
         socket.emit('chat message', `B${player.getCurrentTime()}D${Date.now()}NEW`)
         fire_client();
     } else if (msg === 'REREQUEST') {
@@ -134,11 +127,22 @@ function fire_client() {
 function onPlayerStateChange(e) {
     console.log(e)
     if (e.data === 1) {
+        console.log(`REQUEST_NOW ${player.getVideoData()['video_id']}`)
+        socket.emit('VIDEO', player.getVideoData()['video_id'])
         socket.emit('chat message', `B${player.getCurrentTime()}D${Date.now()}`)
         fire_client()
     }
     if (e.data === 2) {
         socket.emit('chat message', 'STOP')
+    }
+
+    if(e.data === 0) {     
+        $('#playlist').html('')
+        console.log('A song is done')
+        var roomID = $('.roomInfo').attr('roomID')
+        var videoID = player.getVideoData()['video_id']
+        console.log('prepare data to remove it from DB. roomID: ' + roomID + ' videoId: ' + videoID)     
+        socket.emit('removeSongThatIsDone', roomID, videoID)
     }
 
 }
@@ -156,6 +160,8 @@ socket.on('addSongToPlaylist', (videoID, videoTitle, thumbnailUrl, duration, roo
         ))
     }).then(()=>{
         console.log(` ${videoTitle} is added into the playlist`)
+        
+        
     })
 })
 
