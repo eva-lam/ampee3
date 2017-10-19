@@ -8,6 +8,10 @@ const express = require('express'),
       hb = require('express-handlebars'),
       app = express(),
       http = require('http').Server(app)
+      models = require('./models')
+      AM3_User = models.user;
+      AM3_YTlist = models.ytlist;
+      AM3_SFlist = models.sflist;
       
     
 
@@ -35,38 +39,7 @@ require('./server_socket.js')(http, client, USER_INFO);
 //USER_INFO: contain all socket-info
 
 
-// io.on('connection', (socket)=>{
 
-//    var current_room;
-
-// 	//dj room creation and register DJ
-// 	socket.on('new room', (room)=>{
-// 		socket.join(room,  () => {
-// 			let id_room_pair = Object.keys(socket.rooms); // [ <socket.id>, 'room 237' ]
-// 			USER_INFO[id_room_pair[0].substring(8,id_room_pair[0].length)] = [id_room_pair[1], 'd'];    //'d' is dj
-// 			for (x in USER_INFO){console.log(`dj info ${x} in room: ${USER_INFO[x]}`)}; // actual info
-			
-// 			current_room = USER_INFO[socket.id.substring(8,socket.id.length)][0];
-			
-// 		})
-// 		console.log(`A new DJ is creating a room and join ${current_room}`);
-		
-// 		socket.emit('say', `hello, you joined ${current_room}`)
-// 	});
-
-// 	//client only join room
-// 	socket.on('new client', (room)=>{
-// 		socket.join(room,  () => {
-// 			let id_room_pair = Object.keys(socket.rooms); // [ <socket.id>, 'room 237' ]
-// 			USER_INFO[id_room_pair[0].substring(8,id_room_pair[0].length)] = [id_room_pair[1], 'c'];
-// 			for (x in USER_INFO){console.log(`client info ${x} in room: ${USER_INFO[x]}`)}; // actual info
-			
-// 			current_room = USER_INFO[socket.id.substring(8,socket.id.length)][0];
-
-// 			console.log('here is '+ current_room)
-// 		})
-// 	})
-// });
 
 // Passport session setup.
 //   To support persistent login sessions, Passport needs to be able to
@@ -514,6 +487,28 @@ app.post('/addtrack', (req, res) =>{
       })
   
     });
+
+app.get('/youtube', (req, res)=>{
+      console.log('here')
+      res.sendFile(`${__dirname}/public/indexyt.html`)
+})
+
+app.get('/selectRoom', (req, res)=>{
+    for (var user in USER_INFO){ 
+        if(USER_INFO[user][1] === 'd'){
+            room.push([USER_INFO[user][0], x])
+        }
+        console.log(`rooms in server: ${room}`)
+    }
+
+    // res.render('selectRoom', {dj: room})
+    res.render('ytSelectRoom', {dj: room})
+});
+
+app.get("/djyt", (req, res)=>{
+  res.render('djRoom')
+})
+
 
 function getSpotifySong(uri, res) {
   let song_id = uri 

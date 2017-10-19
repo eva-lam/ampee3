@@ -91,7 +91,67 @@ module.exports = function (http, client, USER_INFO) {
             io.to(current_room).emit('sf_play', lagtime, data);
         })
 
+        socket.on('audiReqPlaylist', (roomID)=>{
+            console.log(`e:audiReqPlaylist is working, requesting all songs of ${roomID}'s room `)
+            AM3_YTlist.findAll({
+                where:{
+                    DJ_room: roomID
+                }
+            }).then((data)=>{
+                console.log(`successfully retrieve ${data.length} song(s) from DB`)
+                data.forEach((song, index)=>{
+                    var title = song.YT_title.slice(0, 15)
+                    console.log(`now emit e:addSongToPlaylist for no. ${index+1}: ${title}... into playlist of Audience's browser`)
+                    socket.emit('addSongToPlaylist', song)
+                })
+            })
+        })
         
+    
+        socket.on('addSongToPlaylist', (videoID, videoTitle, thumbnailUrl, duration, DJ_room) => {
+            console.log('running sendSongToDB')
+            AM3_YTlist.create({
+                YT_video_id: videoID,
+                YT_title: videoTitle,
+                YT_video_thumbnailurl: thumbnailUrl,
+                YT_video_duration: duration,
+                DJ_room: DJ_room
+            }).then(()=>{
+                AM3_YTlist.findOne({
+                    where: {
+                        YT_video_id: videoID,
+                        DJ_room: DJ_room      
+                    }
+                }).then((data)=>{
+                    //console.log(data)
+                    console.log(`ROOM: ${current_room}`)
+                    io.to(current_room).emit('addSongToPlaylist', data.YT_video_id, data.YT_title, data.YT_video_thumbnailurl, data.YT_video_duration)
+                    console.log(`emit addSongToplaylist id: ${data.YT_video_id} title: ${data.YT_title} thumbnail: ${data.YT_video_thumbnailurl} duration: ${data.YT_video_duration}`)
+                    
+                })
+            })
+    
+        })
+    
+    
+        socket.on('findingAllRooms', function(){
+            console.log('room numbers = dj numbers. then search who are dj in USER_INFO(obj)')
+            console.log(USER_INFO)
+            for(var user in USER_INFO){
+                var user = USER_INFO[user]
+                if(user[1] === 'd'){
+                    console.log(user[0] + ' is a dj, now creating one room-box for his/her room')
+                    var roomID = user[0]
+                    console.log(AM3_YTlist.findOne({where: {DJ_room: roomID}}))
+                    AM3_YTlist.findOne({where: {DJ_room: roomID}}).then((data)=>{
+                        var currSongID = data.YT_video_id
+                        socket.emit('buildingRoomBox', roomID, currSongID)
+                    }).then(()=>{
+                        console.log(`emitted buildingRoomBox for ${roomID}'s room`)
+                    })   
+                }
+            }
+        })
         
 
     })
