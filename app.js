@@ -244,7 +244,7 @@ app.get('/play', function(req, res){
       headers: {Authorization: "Bearer "+ data}
 
     }).then(function(response){
-      console.log('play button is working !')
+      console.log(`play button is working ! ${user_id}`)
       return user_id;
       //use send and render if need to refresh page
       res.json(null) //server-side ajax //use ajax here if dont want to refresh page 
