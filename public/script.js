@@ -11,7 +11,7 @@ $("#name_submission").click(function(event){
 		}).done(function( data ){
 			console.log(data)
 			if (data !== null){	
-				$("#named_playlist").append('<h2>Playlist name: '+ data.name+ '</h2><br><h5>'+data.listid+'</h5>');
+				$("#named_playlist").append('<h4>Playlist name: '+ data.name+ '</h4><br><h5>'+data.listid+'</h5>');
 				
 			}else{
 				$("#error_name").html( "You might need to be a premium member to access this feature" );  
