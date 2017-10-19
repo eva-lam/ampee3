@@ -25,7 +25,7 @@ module.exports = function (http, client, USER_INFO) {
             })
             console.log(`A new DJ is creating a room and join ${current_room} in ${program}`);
 
-            socket.to(current_room).emit('say', `hello, you joined ${current_room}`)
+            io.to(current_room).emit('say', `hello, you joined ${current_room}`)
 
         });
 
@@ -104,7 +104,7 @@ module.exports = function (http, client, USER_INFO) {
                 data.forEach((song, index) => {
                     var title = song.YT_title.slice(0, 15)
                     console.log(`now emit e:addSongToPlaylist for no. ${index+1}: ${title}... into playlist of Audience's browser`)
-                    socket.to(current_room).emit('addSongToPlaylist', song)
+                    io.to(current_room).emit('addSongToPlaylist', song)
                 })
             })
         })
@@ -156,7 +156,7 @@ module.exports = function (http, client, USER_INFO) {
                     console.log(data)
                     console.log(`${roomID} still has ${data.length} song(s)`)
                     data.forEach((song)=>{
-                        socket.to(current_room).emit(
+                        io.to(current_room).emit(
                             'addSongToPlaylist',
                             song.YT_video_id,
                             song.YT_title,
@@ -167,7 +167,9 @@ module.exports = function (http, client, USER_INFO) {
                     })
                 }).then(() => {
                     console.log(`all songs of ${roomID} left in DB have been sent to client-side to append into #playlist div`)
-                    socket.to(current_room).emit('nextSong')
+                    AM3_YTlist.findOne({where: {DJ_room: roomID}}).then((data)=>{
+                        io.to(current_room).emit('nextSong', data.YT_video_id)
+                    })
                 })
             })
         })
@@ -193,7 +195,7 @@ module.exports = function (http, client, USER_INFO) {
                         }
                     }).then((data) => {
                         var currSongID = data.YT_video_id
-                        socket.to(current_room).emit('buildingRoomBox', roomID, currSongID)
+                        io.to(current_room).emit('buildingRoomBox', roomID, currSongID)
                     }).then(() => {
                         console.log(`emitted buildingRoomBox for ${roomID}'s room`)
                     })
