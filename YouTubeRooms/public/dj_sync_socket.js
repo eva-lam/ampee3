@@ -125,10 +125,10 @@ function fire_client() {
 
 
 
-setInterval(() => {
-    $('#info').html(`<h3 style="color: white">currentTime ${player.getCurrentTime()} </p></h3>`)
-    socket.emit('CHECKING', player.getCurrentTime())
-}, 1000)
+// setInterval(() => {
+//     $('#info').html(`<h3 style="color: white">currentTime ${player.getCurrentTime()} </p></h3>`)
+//     socket.emit('CHECKING', player.getCurrentTime())
+// }, 1000)
 
 //dj stop, client stop also
 function onPlayerStateChange(e) {

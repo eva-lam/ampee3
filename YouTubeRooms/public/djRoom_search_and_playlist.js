@@ -51,7 +51,7 @@ $(function () {
 		var videoID = $(this).parent().attr('id')
 		if(!videoID) throw new Error('cannot get video id')
 		var videoTitle = $(`#${videoID} .title`).text()
-		var thumbnailUrl = $(`#${videoID} .thumbnail`).attr('src')
+		var thumbnailUrl = $(`#${videoID}`).attr('thumbnailUrl')
 		var duration = $(`#${videoID} .duration`).text()
 		// emit 
 		socket.emit(

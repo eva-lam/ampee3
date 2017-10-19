@@ -24,9 +24,9 @@ app.get('/', (req, res)=>{
 })
 
 app.get('/selectRoom', (req, res)=>{
-    for (var x in USER_INFO){ 
-        if(USER_INFO[x][1] === 'd'){
-            room.push([USER_INFO[x][0], x])
+    for (var user in USER_INFO){ 
+        if(USER_INFO[user][1] === 'd'){
+            room.push([USER_INFO[user][0], x])
         }
         console.log(`rooms in server: ${room}`)
     }
@@ -169,14 +169,22 @@ io.on('connection', (socket)=>{
 
 
     socket.on('findingAllRooms', function(){
-        console.log('find all rooms (room is const in app.js)')
-        console.log(room)
-		// room.forEach(function(room){
-		// 	var roomID = room
-        //     var currSongID = AM3_YTlist.findOne({where: {DJ_room: roomID}}).YT_video_id
-        //     console.log(roomID + currSongID + ' e:findingAllRooms')
-        //     socket.emit('buildingRoomBox', roomID, currSongID)
-		// })
+        console.log('room numbers = dj numbers. then search who are dj in USER_INFO(obj)')
+        console.log(USER_INFO)
+        for(var user in USER_INFO){
+            var user = USER_INFO[user]
+            if(user[1] === 'd'){
+                console.log(user[0] + ' is a dj, now creating one room-box for his/her room')
+                var roomID = user[0]
+                console.log(AM3_YTlist.findOne({where: {DJ_room: roomID}}))
+                AM3_YTlist.findOne({where: {DJ_room: roomID}}).then((data)=>{
+                    var currSongID = data.YT_video_id
+                    socket.emit('buildingRoomBox', roomID, currSongID)
+                }).then(()=>{
+                    console.log(`emitted buildingRoomBox for ${roomID}'s room`)
+                })   
+            }
+		}
     })
 
 })
