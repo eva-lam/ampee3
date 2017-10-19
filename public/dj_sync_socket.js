@@ -81,24 +81,15 @@ socket.on('say', (msg) => {
     //$('h1').html(`<h3 style="color: white">Server say ${msg} </p></h3>`)
 })
 
-//take the message from from when submit are click
-// $('#s_bu').on('click', (e) => {
-//     //e.preventDefault();
-//     console.log("here")
-//     if ($('#inbox').val() !== '') {
-
-//         socket.emit('VIDEO', $('#inbox').val())
-//         v_url = $('#inbox').val()
-//         console.log(v_url);
-//         player.cueVideoById(v_url)
-//         player.playVideo();
+//handle next song
+socket.on('nextSong', (song)=>{
+    player.cueVideoById(song)
+    player.playVideo(song)
+    socket.emit('VIDEO', player.getVideoData()['video_id'])
+    socket.emit('chat message', `B${player.getCurrentTime()}D${Date.now()}NEW`)
 
 
-//         //empty the box after send
-//         $('#inbox').val('');
-
-//     }
-// })
+})
 
 socket.on('chat message', (msg) => {
     if (msg === 'REQUEST_NOW') {
