@@ -1,5 +1,19 @@
+/* html {
+    font-weight: 300;
+    -webkit-font-smoothing: antialiased;
+  } */
+
+@font-face {
+    
+    font-family: 'riffic-bold';
+    src: url('riffic-bold-webfont.woff2') format('woff2'),
+         url('riffic-bold-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+
+}
 body {
-    background-image: url("music.jpg");
+    background-image: url("Music_background.jpg");
     background-repeat: no-repeat; 
     height: 1200px; 
     background-position: center;
@@ -7,6 +21,15 @@ body {
     background-size: cover;
     text-align:center; 
 }
+
+.title{
+ font-size: 200%;
+}
+
+.homepage{
+    margin:30px; 
+}
+
 
 h1 {
     color:lightseagreen;
