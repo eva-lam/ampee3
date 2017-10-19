@@ -167,7 +167,9 @@ module.exports = function (http, client, USER_INFO) {
                     })
                 }).then(() => {
                     console.log(`all songs of ${roomID} left in DB have been sent to client-side to append into #playlist div`)
-                    io.to(current_room).emit('nextSong')
+                    AM3_YTlist.findOne({where: {DJ_room: roomID}}).then((data)=>{
+                        io.to(current_room).emit('nextSong', data.YT_video_id)
+                    })
                 })
             })
         })
