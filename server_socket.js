@@ -81,13 +81,14 @@ module.exports = function (http, client, USER_INFO) {
 
         });
 
-        socket.on('sf_play', (date_info, user_id) => {
-            console.log(`Sportify press DJ Resume/Play. Time: ${date_info}`)
-            main_app.DJsync(user_id).then((dj_date_info)=>{
-                lagtime = dj_data_info - dateinfo
-                main_app.syncParty(lagtime, user_id)
-            })
-            io.to(current_room).emit('sf', 'confirmed a connection');
+        socket.on('sf_play', (date_info,data) => {
+            console.log(`Sportify press DJ Resume/Play (server-fly). Time: ${date_info}`)
+            // main_app.DJsync(user_id).then((dj_date_info)=>{
+            //     lagtime = dj_data_info - dateinfo
+            //     main_app.syncParty(lagtime, user_id)
+            // })
+            lagtime = dj_data_info - dateinfo
+            io.to(current_room).emit('sf_play', lagtime, data);
         })
 
         
