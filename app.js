@@ -553,13 +553,14 @@ app.get('/syncDJ', function(req, res){
   const user_id = req.user.id;
   
   client.get(user_id, (err,data) => {
-  console.log(`in syncDJ get: ${data}`)
+  
   axios({
     method: "GET",
     url: `https://api.spotify.com/v1/me/player/currently-playing`,
     headers: {Authorization: "Bearer " + data},
   })
   .then(function(response){
+    console.log(`in syncDJ get: ${response}`)
     current_position = response.data.progress_ms;
     current_track_id = response.data.item.id;
     current_track_name = response.data.item.name;
