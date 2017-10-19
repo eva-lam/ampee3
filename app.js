@@ -245,6 +245,7 @@ app.get('/play', function(req, res){
 
     }).then(function(response){
       console.log('play button is working !')
+      return user_id;
       //use send and render if need to refresh page
       res.json(null) //server-side ajax //use ajax here if dont want to refresh page 
     }).catch((err) =>{
@@ -547,8 +548,9 @@ var current_track_isPlaying;
 var current_track_artist;
 var current_track_duration;
 
-exports.DJsync = function(){
-  	const user_id = req.user.id;
+exports.DJsync = function(id){
+    const user_id = id;
+    console.log(`djsync: ${user_id}`)
   	client.get(user_id, (err,data) => {
 		axios({
 			method: "GET",
@@ -573,8 +575,9 @@ exports.DJsync = function(){
 
 
 //sync with the same song as DJ
-exports.syncParty = function(lagtime){
-	let user_id = req.user.id;
+exports.syncParty = function(lagtime, id){
+  let user_id = id;
+  console.log(`syncParty id: ${user_id}, lag: ${lagtime}` )
 	client.get(user_id, (err, data) => {
 		axios({
 			method: "PUT",

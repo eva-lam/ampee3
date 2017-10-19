@@ -24,7 +24,7 @@ $("#play_button").click(function(){
 	$.ajax({
         type: 'GET',
         url: '/play',
-		}).done(function(data) {
+		}).done(function(user_id) {
 			if ( data != null ) {
 			//DOM manipulation ""->refers to tag on html
 			//".friends" refers to class in css
@@ -32,7 +32,8 @@ $("#play_button").click(function(){
 			$("#error").html( "You might need to be a premium member to access this feature" );
 			}
 
-			socket.emit('sf_play', Date.now())
+			socket.emit('sf_play', Date.now(), user_id)
+			console.log(`emitted the first date time: ${Date.now()}, id: ${user_id}`)
 		});
 })
 

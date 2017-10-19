@@ -81,11 +81,11 @@ module.exports = function (http, client, USER_INFO) {
 
         });
 
-        socket.on('sf_play', (date_info) => {
+        socket.on('sf_play', (date_info, user_id) => {
             console.log(`Sportify press DJ Resume/Play. Time: ${date_info}`)
-            main_app.DJsync().then((dj_date_info)=>{
+            main_app.DJsync(user_id).then((dj_date_info)=>{
                 lagtime = dj_data_info - dateinfo
-                main_app.syncParty(lagtime)
+                main_app.syncParty(lagtime, user_id)
             })
             io.to(current_room).emit('sf', 'confirmed a connection');
         })
