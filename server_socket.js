@@ -22,6 +22,7 @@ module.exports = function (http, client, USER_INFO) {
             console.log(`A new DJ is creating a room and join ${current_room} in ${program}`);
 
             socket.emit('say', `hello, you joined ${current_room}`)
+
         });
 
         //client only join room
@@ -77,10 +78,17 @@ module.exports = function (http, client, USER_INFO) {
 
         });
 
-        socket.on('sf', (msg) => {
-            console.log('a sportify DJ is connected')
+        socket.on('sf_play', (date_info) => {
+            console.log(`Sportify press DJ Resume/Play. Time: ${date_info}`)
+            DjSync().then((dj_date_info)=>{
+                lagtime = dj_data_info - dateinfo
+                syncParty(lagtime)
+            })
             io.to(current_room).emit('sf', 'confirmed a connection');
         })
+
+        
+        
 
     })
 
