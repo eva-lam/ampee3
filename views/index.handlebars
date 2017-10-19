@@ -28,7 +28,7 @@
                 opacity: 0.7,
                 repeat: -1, 
 				yoyo: true, 
-				ease: Elastic.easeNone,
+				ease: RoughEase.ease.config({ template:  Power0.easeNone, strength: 1, points: 20, taper: "none", randomize: true, clamp: false}),
 				scale: 1.1
                 
             });
@@ -37,7 +37,7 @@
 			 TweenMax.to("img", 0.5,{
                 rotation: 360,
                 repeat: -1, 
-				ease: Elastic.easeNone,
+				ease: Power0.easeNone,
 				
 			})
 		})
