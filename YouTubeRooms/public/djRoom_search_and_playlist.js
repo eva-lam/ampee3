@@ -61,10 +61,10 @@ $(function () {
 		socket.emit('djRoom', videoID)
 			console.log(`A video is added into DB of ${roomID}'s room. videoID: ${videoID} title:${videoTitle} thumbnailUrl: ${thumbnailUrl} duration: ${duration}`)
 	
-		//kevin: play video after list created	
-		player.cueVideoById(videoID)
-		player.playVideo();
-		console.log("player should play")
+		// //kevin: play video after list created	
+		// player.cueVideoById(videoID)
+		// player.playVideo();
+		// console.log("player should play")
 	
 	})
 })

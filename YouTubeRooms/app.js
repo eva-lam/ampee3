@@ -98,8 +98,6 @@ io.on('connection', (socket)=>{
     socket.on('disconnect', ()=>{
         console.log(`DJ: ${socket.id.substring(8,socket.id.length)} is gone from Chrome. Room: ${USER_INFO[socket.id.substring(8,socket.id.length)]} is closed. Total list ${Object.keys(USER_INFO).length}`)
         delete USER_INFO[socket.id.substring(8,socket.id.length)]
-        
-        
     })
 
     //this 1 line will get the chat message from client
@@ -166,7 +164,6 @@ io.on('connection', (socket)=>{
         })
 
     })
-
 
     socket.on('findingAllRooms', function(){
         console.log('room numbers = dj numbers. then search who are dj in USER_INFO(obj)')

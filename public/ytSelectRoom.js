@@ -1,9 +1,13 @@
 function tplawesome(e, t) {res = e; for (var n = 0; n < t.length; n++) {res = res.replace(/\{\{(.*?)\}\}/g, function (e, r) {return t[n][r]})}return res}
 
 $(function(){
+<<<<<<< HEAD
+
+=======
 	// mute autoplay video for user better select the room they want to go
 	// var myVideo = iframe.getElementsByClass('currSong'); 
 	// myVideo.mute();
+>>>>>>> cbd3f87e75b609f2d266223f9dad5495842c4bda
 
 	
 	$('#refreshBtn').on('click', function(){
