@@ -19,7 +19,7 @@ $("#name_submission").click(function(event){
 		});
 })
 
-$("#playbutton").click(function(){
+$("#play_button").click(function(){
 	//ajax
 	$.ajax({
         type: 'GET',
@@ -34,7 +34,7 @@ $("#playbutton").click(function(){
 		});
 })
 
-$("#pausebutton").click(function(){
+$("#pause_button").click(function(){
 	$.ajax({
         type: 'GET',
         url: '/pause',
@@ -45,7 +45,7 @@ $("#pausebutton").click(function(){
 		});
 })
 
-$("#syncDJ").click(function(){
+$("#sync_dj").click(function(){
 	$.ajax({
         type: 'GET',
 		url: '/syncDJ',
@@ -57,7 +57,7 @@ $("#syncDJ").click(function(){
 		});
 })
 
-$("#syncParty").click(function(){
+$("#sync_party").click(function(){
 	$.ajax({
         type: 'GET',
         url: '/syncParty',
@@ -77,9 +77,10 @@ $("#search_btn").click(function(){
 
 		}).done(function( data ){
 			if (data != null){
+				console.log(data.songlist);
 				let x= data.songlist;
 				for(var i=0; i<x.length; i++){
-					$(".result").append('<div><h5>'+x[i].name +'<button class="song" value="'+ x[i].uri+ '">add</button>'+'<div>'); 
+					$(".result").append('<div class ="result_ofsearch"><h5>'+x[i].name +'</h5><br><h7>Artist: '+x[i].artists[0].name+'<h7><br><button class="song" value="'+ x[i].uri+ '">add</button>'+'<div>'); 
 				}
 			}else{
 				$(".result").html( "You might need to be a premium member to access this feature" );  
@@ -100,12 +101,13 @@ $('.result').on('click','.song',(event) => {
 			
 		}).done(function(data){
 			console.log(data)
+			console.log("added successfully")
 			if(data !=null){
 				//jquery clear html 
-			$('#list_ofSongs').html('');
-			console.log(data);
+			$('#list_of_songs').html('');
+			   console.log(data);
 				$.each(data.listed_song,function(){
-					$('#list_ofSongs').append('<div><h6>'+this+'</h6><button id= "delete_btn" value ="'+this+'">DELETE</button></div>');
+					$('#list_of_songs').append('<div class ="added"> <h5>'+this.name+'</h5><br><h7> Artist: '+this.artist+'</h7><br><br><button class= "delete_btn" value="'+this.id+'">DELETE</button></div>');
 				})
 			}
 		})
@@ -113,19 +115,21 @@ $('.result').on('click','.song',(event) => {
 });
 
 //delete button part 
-$("#delete_btn").click(function(){
-	let uri_delete = $("#delete_btn").val(); 
+$("#list_of_songs").on('click','.delete_btn',function(element){
+	let uri_delete = $(".delete_btn").val(); 
 	$.ajax({
         type: 'DELETE',
 		url: '/deletetrack',
 		data: { uris : uri_delete}
 
 		}).done(function( data ){
-			if (data != null){
-				$('#list_ofSongs').remove('<div><h6>'+this+'</h6><button id= "delete_btn" value ="'+this+'">DELETE</button></div>');
 
+			if (data.success){
+				// $(".added").remove();
+				$($('.delete_btn')[0]).parent().remove();
+			    console.log("deleted song!")
 			}else{
-				$("#list_ofSongs").html( "You might need to be a premium member to access this feature" );  
+				$("#error").html( "cannot Delete!" );  
 		}
 	});
 })
@@ -143,21 +147,21 @@ $("#seekposition_btn").click(function(){
 			$("#search_result").html( data.position );  
 
 			}else{
-			$("#search_result").html( "You might need to be a premium member to access this feature" ); 
+			$("#error").html( "You might need to be a premium member to access this feature" ); 
 			}
 	});
 })
 
-$("#getplaylist").click(function(){
-	$.ajax({
-        type: 'GET',
-        url: '/getplaylist',
-		}).done(function(data) {
-			if (data != null) {
-			$("#error").html( "You might need to be a premium member to access this feature" );  
-			}
-		});
-})
+// $("#get_playlist").click(function(){
+// 	$.ajax({
+//         type: 'GET',
+//         url: '/getplaylist',
+// 		}).done(function(data) {
+// 			if (data != null) {
+// 			$("#error").html( "You might need to be a premium member to access this feature" );  
+// 			}
+// 		});
+// })
 
 // $("#searching").click(function(){
 // 	$.ajax({

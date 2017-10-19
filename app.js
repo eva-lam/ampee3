@@ -472,13 +472,13 @@ app.post('/addtrack', (req, res) =>{
             contentType: 'application/json',
             //optional to pass uris and position 
             //here we put song_id to be added to playlist_id 
-            data:{"tracks":[{uri}]}
+            data:{"tracks":[{"uri":uri}]}
   
           }).then(function(response){
               
-            res.json({"snapshotId":response.snapshot_id})
+            res.json({success:true});
   
-           }).catch((err) =>console.log('track adding error occurs',err))
+           }).catch((err) =>res.json({sucess:false},err))
         })
   
       })
@@ -500,8 +500,10 @@ app.post('/addtrack', (req, res) =>{
         
           }).then(function(response){
               console.log(response.data)
+   
               let songName_onList = response.data.items.map(function(element){
-                return element.track.name
+                return {"name": element.track.name, "artist":element.track.artists[0].name,"id":element.track.uri}
+                //"artist":element.track.artists[0].name,
               })
               res.json({"listed_song":songName_onList})
 
