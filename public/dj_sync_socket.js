@@ -141,6 +141,15 @@ function onPlayerStateChange(e) {
         socket.emit('chat message', 'STOP')
     }
 
+    if(e.data === 0) {     
+        $('#playlist').html('')
+        console.log('A song is done')
+        var roomID = $('.roomInfo').attr('roomID')
+        var videoID = player.getVideoData()['video_id']
+        console.log('prepare data to remove it from DB. roomID: ' + roomID + ' videoId: ' + videoID)     
+        socket.emit('removeSongThatIsDone', roomID, videoID)
+    }
+
 }
 
 socket.on('addSongToPlaylist', (videoID, videoTitle, thumbnailUrl, duration, roomID)=>{

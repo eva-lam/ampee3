@@ -55,7 +55,7 @@ $(function () {
 		var duration = $(`#${videoID} .duration`).text()
 		// emit 
 		socket.emit(
-			'addSongToPlaylist',
+			'sendSongToDB',
 			videoID, videoTitle, thumbnailUrl, duration, roomID,
 		)
 		socket.emit('djRoom', videoID)
