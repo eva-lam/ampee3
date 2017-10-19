@@ -1,3 +1,6 @@
+var main_app = require('./app.js')
+
+
 module.exports = function (http, client, USER_INFO) {
     const ioo = require('socket.io')(http);
     
@@ -22,6 +25,7 @@ module.exports = function (http, client, USER_INFO) {
             console.log(`A new DJ is creating a room and join ${current_room} in ${program}`);
 
             socket.emit('say', `hello, you joined ${current_room}`)
+
         });
 
         //client only join room
@@ -77,10 +81,18 @@ module.exports = function (http, client, USER_INFO) {
 
         });
 
-        socket.on('sf', (msg) => {
-            console.log('a sportify DJ is connected')
-            io.to(current_room).emit('sf', 'confirmed a connection');
+        socket.on('sf_play', (date_info,data) => {
+            console.log(`Sportify press DJ Resume/Play (server-fly). Time: ${date_info}`)
+            // main_app.DJsync(user_id).then((dj_date_info)=>{
+            //     lagtime = dj_data_info - dateinfo
+            //     main_app.syncParty(lagtime, user_id)
+            // })
+            lagtime = dj_data_info - dateinfo
+            io.to(current_room).emit('sf_play', lagtime, data);
         })
+
+        
+        
 
     })
 

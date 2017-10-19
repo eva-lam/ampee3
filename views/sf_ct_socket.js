@@ -1,3 +1,4 @@
+console.log('hhi hi here')
 var socket = io('/djroom');
 socket.emit('new client', '{{room}}', "sportify");
 socket.on('say', (msg)=>{$('h1').html(`<h3 style="color: white">Server say ${msg} </p></h3>`)})

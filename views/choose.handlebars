@@ -5,13 +5,7 @@
 	<a href="/">HOME</a> 
 	<a href="/logout">LOG OUT</a>
 		{{!-- <a href="/joinparty">Join a Party!</a> --}}
-<<<<<<< HEAD
-</h2>
-			
-<h2>Choose if you want to be a DJ or just join a party !</h2>
-=======
     </h2>
->>>>>>> 54631638a11c60a3f1a6c107bb39a44789a6b7a2
 
 <div class="row text-center">
     <h2>This is DJ list</h2>
@@ -19,31 +13,40 @@
     
     <div class="row" style = "min-height:75px;padding: 50px,10px;color:chocolate">
 	
-		{{#yt}}
+		
+		{{#sp}}
+		<div class="col-xs-12 col-sm-4">
+            <div class="row text-center">
+                <a href="/dj/{{this.[0]}}">
+                    <img src = 'spotify-logo.png'; width = '150px';>
+                </a>
+            </div>
+            <div class="row text-center">
+                 <h4  style="{color:white}">Room: {{this.[0]}}, DJ: {{this.[1]}}</a></h4>
+            </div>
+        </div>
+		{{/sp}}
+        {{#yt}}
 		
         <div class="col-xs-12 col-sm-4">
             <div class="row text-center">
-                <img src = 'spotify-logo.png'; width = '150px';>
+               youtube video
             </div>
             <div class="row text-center">
                 <h4  style="{color:white}"><a href="/dj/{{this.[0]}}">Room: {{this.[0]}}, DJ: {{this.[1]}}</a></h4>
             </div>
         </div>
 		{{/yt}}
-		{{#sf}}
-		<div class="col-xs-12 col-sm-4">
-            <div class="row text-center">
-                youtube video
-            </div>
-            <div class="row text-center">
-                 <h4  style="{color:white}"><a href="/dj/{{this.[0]}}">Room: {{this.[0]}}, DJ: {{this.[1]}}</a></h4>
-            </div>
-        </div>
-		{{/sf}}
         
     </div>
     
 	<div class="row">
+        <br>
+        <br>
+        <br>
+        <br>
     	<button><a href="/account"><h3>Become a DJ!</h3></a></button>
 	</div>
 </div>
+
+<script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
