@@ -80,7 +80,7 @@ module.exports = function (http, client, USER_INFO) {
 
         socket.on('sf_play', (date_info) => {
             console.log(`Sportify press DJ Resume/Play. Time: ${date_info}`)
-            DjSync().then((dj_date_info)=>{
+            DJsync().then((dj_date_info)=>{
                 lagtime = dj_data_info - dateinfo
                 syncParty(lagtime)
             })
