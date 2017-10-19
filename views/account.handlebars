@@ -144,7 +144,7 @@
           
           //start the socket after confirmed
           socket = io('/djroom');
-          socket.emit('new room', room_title);
+          socket.emit('new room', room_title, "sportify");
 
         } else {
           $('#warn').css('color', 'red').text('Please enter a room name')

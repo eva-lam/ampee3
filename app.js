@@ -9,14 +9,14 @@ const express = require('express'),
       app = express(),
       http = require('http').Server(app)
       
-      
+    
 
 
 let URL = 'http://localhost:8080';
 //here we import dotenv, env must store in root directory
 //we don't assign it as variable since we don't need them anymore afterwards
 require('dotenv').config()
-require('./server_socket.js')(http); 
+ 
 
 
 const redis = require('redis');
@@ -29,6 +29,10 @@ const client = redis.createClient({
 client.on('error', function(err){
     console.log(err);
 });
+
+var USER_INFO = {}
+require('./server_socket.js')(http, client, USER_INFO);
+//USER_INFO: contain all socket-info
 
 
 // io.on('connection', (socket)=>{
@@ -172,7 +176,33 @@ app.get('/callback',
   });
 
 app.get('/choose',function(req,res){
-  res.render('choose')
+
+  const room_yt = [[]];
+  const room_sp = [[]];
+  
+      for (var x in USER_INFO){ 
+          
+          if(USER_INFO[x][1] === 'd'){
+            if (USER_INFO[x][1] === 'sportify'){
+              room_yt.push([USER_INFO[x][0], x])}
+            else 
+              room_sp.push([USER_INFO[x][0], x])}
+          }
+
+          console.log(`rooms in server: ${room_yt, room_sp}`)
+      
+  
+  res.render('choose', {yt: room_yt, sp: room_sp})
+});
+
+
+app.get('/dj/:id', (req, res)=>{
+  if((req.params.id) === ''){
+      res.send("you are going to room of nothing :(")
+  }else{
+      console.log("here is /dj")
+      res.render('audiRoom', {room: req.params.id})
+  }
 });
 
 

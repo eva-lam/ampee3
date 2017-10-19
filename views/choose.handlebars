@@ -1,16 +1,49 @@
 {{!-- This is the first page people see after login--}}
-<h2>
+
+<div class="row text-center">
+    <h2>
 	<a href="/">HOME</a> 
 	<a href="/logout">LOG OUT</a>
 		{{!-- <a href="/joinparty">Join a Party!</a> --}}
+<<<<<<< HEAD
 </h2>
 			
 <h2>Choose if you want to be a DJ or just join a party !</h2>
+=======
+    </h2>
+>>>>>>> 54631638a11c60a3f1a6c107bb39a44789a6b7a2
 
-<button><a href="/account"><h3>Become a DJ!</h3></a></button>
-<br>
-<br>
-<img src = 'spotify-logo.png'; width = '150px';>
-<br>
-<br>
-<button><a href="/joinparty"><h3>I just want to join a room!</h3></a> </button>
+<div class="row text-center">
+    <h2>This is DJ list</h2>
+    <h2>Choose if you want to be a DJ or just join a party </h2>
+    
+    <div class="row" style = "min-height:75px;padding: 50px,10px;color:chocolate">
+	
+		{{#yt}}
+		
+        <div class="col-xs-12 col-sm-4">
+            <div class="row text-center">
+                <img src = 'spotify-logo.png'; width = '150px';>
+            </div>
+            <div class="row text-center">
+                <h4  style="{color:white}"><a href="/dj/{{this.[0]}}">Room: {{this.[0]}}, DJ: {{this.[1]}}</a></h4>
+            </div>
+        </div>
+		{{/yt}}
+		{{#sf}}
+		<div class="col-xs-12 col-sm-4">
+            <div class="row text-center">
+                youtube video
+            </div>
+            <div class="row text-center">
+                 <h4  style="{color:white}"><a href="/dj/{{this.[0]}}">Room: {{this.[0]}}, DJ: {{this.[1]}}</a></h4>
+            </div>
+        </div>
+		{{/sf}}
+        
+    </div>
+    
+	<div class="row">
+    	<button><a href="/account"><h3>Become a DJ!</h3></a></button>
+	</div>
+</div>
