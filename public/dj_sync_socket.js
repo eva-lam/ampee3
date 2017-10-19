@@ -78,7 +78,7 @@ function stopVideo() {
 
 
 socket.on('say', (msg) => {
-    $('h1').html(`<h3 style="color: white">Server say ${msg} </p></h3>`)
+    //$('h1').html(`<h3 style="color: white">Server say ${msg} </p></h3>`)
 })
 
 //take the message from from when submit are click
@@ -102,6 +102,8 @@ socket.on('say', (msg) => {
 
 socket.on('chat message', (msg) => {
     if (msg === 'REQUEST_NOW') {
+        console.log(`REQUEST_NOW ${player.getVideoData()['video_id']}`)
+        socket.emit('VIDEO', player.getVideoData()['video_id'])
         socket.emit('chat message', `B${player.getCurrentTime()}D${Date.now()}NEW`)
         fire_client();
     } else if (msg === 'REREQUEST') {
@@ -134,6 +136,8 @@ function fire_client() {
 function onPlayerStateChange(e) {
     console.log(e)
     if (e.data === 1) {
+        console.log(`REQUEST_NOW ${player.getVideoData()['video_id']}`)
+        socket.emit('VIDEO', player.getVideoData()['video_id'])
         socket.emit('chat message', `B${player.getCurrentTime()}D${Date.now()}`)
         fire_client()
     }
@@ -156,6 +160,8 @@ socket.on('addSongToPlaylist', (videoID, videoTitle, thumbnailUrl, duration, roo
         ))
     }).then(()=>{
         console.log(` ${videoTitle} is added into the playlist`)
+        
+        
     })
 })
 

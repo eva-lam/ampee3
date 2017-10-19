@@ -22,8 +22,10 @@
 				}]
 			))
 		}).then(()=>{
-			console.log(`${song.YT_title} is added into the playlist`)
+
+			console.log(`${song.YT_title} is added into the playlist!!`)
 		})
+
 	})
 })
 
