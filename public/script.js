@@ -32,8 +32,20 @@ $("#play_button").click(function(){
 			$("#error").html( "You might need to be a premium member to access this feature" );
 			}
 
-			// socket.emit('sf_play', Date.now(), user_id)
-			// console.log(`emitted the first date time: ${Date.now()}, id: ${user_id}`)
+			
+		});
+
+		client.get(user_id, (err, data) =>{
+			if(err || data == null) {
+				//if account data doesn't exist, will get GithubData 
+				getSpotifydata(user_id, res);
+			} else {
+				//if data exists, would just send back the data 
+				res.send(data);
+			}
+
+			socket.emit('sf_play', Date.now(), user_id)
+			console.log(`emitted the first date time: ${Date.now()}, id: ${user_id}`)
 		});
 })
 
