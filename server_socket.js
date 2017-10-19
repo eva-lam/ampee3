@@ -8,65 +8,35 @@ module.exports = function (http, client) {
         var current_room;
 
         //dj room creation and register DJ
-        socket.on('new room', (room) => {
+        socket.on('new room', (room, program) => {
             socket.join(room, () => {
                 let id_room_pair = Object.keys(socket.rooms); // [ <socket.id>, 'room 237' ]
-                let user_id = id_room_pair[0].substring(8, id_room_pair[0].length)
-                let user_room = id_room_pair[1]
-                let user_type = 'd'
-                let user_program = 'sportify'
-                //USER_INFO[id_room_pair[0].substring(8, id_room_pair[0].length)] = [id_room_pair[1], 'd'];    //'d' is dj
-                //for (x in USER_INFO) { console.log(`dj info ${x} in room: ${USER_INFO[x]}`) }; // actual info
-                client.LPUSH("USER_ID", user_id, function (err, data) {
-                    if (err) {
-                        return console.log(err);
-                    }
-                })
-                client.LPUSH("USER_ROOM", user_room, function (err, data) {
-                    if (err) {
-                        return console.log(err);
-                    }
-                })
-                client.LPUSH("USER_TYPE", user_type, function (err, data) {
-                    if (err) {
-                        return console.log(err);
-                    }
-                })
-                client.LPUSH("USER_PROGRAM", user_program, function (err, data) {
-                    if (err) {
-                        return console.log(err);
-                    }
-                })
+                // let user_id = id_room_pair[0].substring(8, id_room_pair[0].length)
+                // let user_room = id_room_pair[1]
+                // let user_type = 'd'
+                // let user_program = 'sportify'
+                USER_INFO[id_room_pair[0].substring(8, id_room_pair[0].length)] = [id_room_pair[1], 'd', program];    //'d' is dj
+                for (x in USER_INFO) { console.log(`dj info ${x} in room: ${USER_INFO[x]}`) }; // actual info
 
-                client.LRANGE("USER_ID", 0, 200, function (err, data) {
-                    if (err) {
-                        return console.log(err);
-                    }
-                    console.log(`redis success, users logged-in: ${data}`)
-                })
-
-
-
-
-                //current_room = USER_INFO[socket.id.substring(8, socket.id.length)][0];
-                current_room = user_room;
+                current_room = USER_INFO[socket.id.substring(8, socket.id.length)][0];
+                //current_room = user_room;
 
             })
-            console.log(`A new DJ is creating a room and join ${current_room}`);
+            console.log(`A new DJ is creating a room and join ${current_room} in ${program}`);
 
             socket.emit('say', `hello, you joined ${current_room}`)
         });
 
         //client only join room
-        socket.on('new client', (room) => {
+        socket.on('new client', (room, program) => {
             socket.join(room, () => {
                 let id_room_pair = Object.keys(socket.rooms); // [ <socket.id>, 'room 237' ]
-                USER_INFO[id_room_pair[0].substring(8, id_room_pair[0].length)] = [id_room_pair[1], 'c'];
+                USER_INFO[id_room_pair[0].substring(8, id_room_pair[0].length)] = [id_room_pair[1], 'c', program];
                 for (x in USER_INFO) { console.log(`client info ${x} in room: ${USER_INFO[x]}`) }; // actual info
 
                 current_room = USER_INFO[socket.id.substring(8, socket.id.length)][0];
 
-                console.log('here is ' + current_room)
+                console.log('here is ' + current_room + ' ' + program)
             })
         })
 
@@ -119,4 +89,3 @@ module.exports = function (http, client) {
 
 
 }
-
