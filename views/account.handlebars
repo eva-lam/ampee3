@@ -26,7 +26,7 @@
 	 <a href="/logout">Log Out</a> </div>
 </h2>
 
-<h1>WELCOME TO THE DJ PAGE</h1>
+<h1>WELCOME TO YOUR DJ PAGE</h1>
 <p>This is your ID: {{ user.id }}</p>
 <p>Profile: <a href="{{user.profileUrl}}">{{ user.profileUrl }}</a></p>
 
@@ -38,11 +38,12 @@
         {{!-- action refers to route name  --}}
         <form action="createplaylist" method="post"> 
             {{!-- playlist_name goes after 'req.body' --}}
-            <input  type="text" name="playlist_name" placeholder="name your playlist" />
-            <input type="submit" name="create" value="create">
+            <input id="playlist_creation" type="text" name="playlist_name" placeholder="name your playlist" />
+            <input id="name_submission" type="submit" name="create" value="create">
         </form>
-
+        <h3 id="error_name"></h3>
         <br>
+        
         <h3>Step 2: Search track and add track to your playlist!</h3>
         {{!-- <form action="searchtrack" class="searching" method="post"> --}}
          <input class ="initial_search" type="text" name="search_track" placeholder="search for track" />
@@ -77,9 +78,10 @@
      <div id='control'>
         <div id ="playlist">
         
-        <h4>YOUR PLAYLIST NAME:{{name}}</h4>
-        <h5>Your sportify playlistID:{{listid}}
-        <br>Your selected songs are shown below</h5>
+        <div id = "named_playlist"></div>
+        {{!-- <h4>YOUR PLAYLIST NAME:{{name}}</h4> --}}
+        
+        <h5>Your selected songs are shown below</h5>
         <h5 id="list_ofSongs"></h5>
       
         </div>

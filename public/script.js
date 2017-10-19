@@ -1,4 +1,24 @@
 //jquery 
+
+$("#name_submission").click(function(event){
+	event.preventDefault();
+	let newName =$("#playlist_creation").val();
+	$.ajax({
+        type: 'POST',
+		url: '/createplaylist',
+		data: { playlist_name : newName}
+
+		}).done(function( data ){
+			console.log(data)
+			if (data !== null){	
+				$("#named_playlist").append('<h2>Playlist name: '+ data.name+ '</h2><br><h5>'+data.listid+'</h5>');
+				
+			}else{
+				$("#error_name").html( "You might need to be a premium member to access this feature" );  
+			}
+		});
+})
+
 $("#playbutton").click(function(){
 	//ajax
 	$.ajax({
@@ -59,7 +79,7 @@ $("#search_btn").click(function(){
 			if (data != null){
 				let x= data.songlist;
 				for(var i=0; i<x.length; i++){
-					$(".result").append('<div>'+x[i].name +'<button class="song" value="'+ x[i].uri+ '">add</button>'+'<div>'); 
+					$(".result").append('<div><h5>'+x[i].name +'<button class="song" value="'+ x[i].uri+ '">add</button>'+'<div>'); 
 				}
 			}else{
 				$(".result").html( "You might need to be a premium member to access this feature" );  

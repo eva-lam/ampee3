@@ -38,12 +38,12 @@ module.exports = function (http, client) {
                     }
                 })
 
-                // client.LRANGE("USER_ID", 0, 100, function (err, data) {
-                //     if (err) {
-                //         return console.log(err);
-                //     }
-                //     console.log(`redis success ${data}`)
-                // })
+                client.LRANGE("USER_ID", 0, 200, function (err, data) {
+                    if (err) {
+                        return console.log(err);
+                    }
+                    console.log(`redis success, users logged-in: ${data}`)
+                })
 
 
 
