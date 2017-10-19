@@ -32,8 +32,8 @@ $("#play_button").click(function(){
 			$("#error").html( "You might need to be a premium member to access this feature" );
 			}
 
-			socket.emit('sf_play', Date.now(), user_id)
-			console.log(`emitted the first date time: ${Date.now()}, id: ${user_id}`)
+			// socket.emit('sf_play', Date.now(), user_id)
+			// console.log(`emitted the first date time: ${Date.now()}, id: ${user_id}`)
 		});
 })
 

@@ -245,7 +245,9 @@ app.get('/play', function(req, res){
 
     }).then(function(response){
       console.log(`play button is working ! ${user_id}`)
-      return user_id;
+      
+      socket.emit('sf_play', Date.now(), user_id)
+			console.log(`emitted the first date time: ${Date.now()}, id: ${user_id}`)
       //use send and render if need to refresh page
       res.json(null) //server-side ajax //use ajax here if dont want to refresh page 
     }).catch((err) =>{
