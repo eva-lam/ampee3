@@ -91,7 +91,7 @@ passport.deserializeUser(function(obj, done) {
 passport.use(new SpotifyStrategy({
   clientID: process.env.APP_KEY,
   clientSecret: process.env.APP_SECRET,
-  callbackURL: 'http://localhost:3000/callback'
+  callbackURL: 'http://104.236.135.26/callback'
   },
   function(accessToken, refreshToken, profile, done) {
     // asynchronous verification, for effect...
@@ -144,12 +144,18 @@ app.get('/rooms',function(req,res){
   res.render('rooms')
 });
 
-app.get('/account', ensureAuthenticated, function(req, res){
-  res.render('account', { user: req.user });
+// app.get('/account', ensureAuthenticated, function(req, res){
+//   res.render('account', { user: req.user });
+// });
+
+//for testing purpose only
+app.get('/account', function(req, res){
+  res.render('account');
 });
 
 app.get('/login', function(req, res){
   res.render('login', { user: req.user });
+  //res.render('choose');  //kevin temp use
 });
 
 
@@ -181,15 +187,15 @@ app.get('/choose',function(req,res){
   const room_sp = [[]];
   
       for (var x in USER_INFO){ 
-          
+      
           if(USER_INFO[x][1] === 'd'){
-            if (USER_INFO[x][1] === 'sportify'){
-              room_yt.push([USER_INFO[x][0], x])}
-            else 
+            if (USER_INFO[x][2] === 'sportify'){
               room_sp.push([USER_INFO[x][0], x])}
+            else {
+              room_yt.push([USER_INFO[x][0], x])}
           }
-
-          console.log(`rooms in server: ${room_yt, room_sp}`)
+      }
+          
       
   
   res.render('choose', {yt: room_yt, sp: room_sp})
@@ -200,9 +206,20 @@ app.get('/dj/:id', (req, res)=>{
   if((req.params.id) === ''){
       res.send("you are going to room of nothing :(")
   }else{
-      console.log("here is /dj")
-      res.render('audiRoom', {room: req.params.id})
-  }
+      for (var x in USER_INFO){
+        if(req.params.id === USER_INFO[x][0]){
+          
+          if(USER_INFO[x][2]=== 'sportify'){
+            
+          res.render('joinparty', {room: req.params.id})
+          }else{
+          res.render('audiRoom', {room: req.params.id})
+          }
+        }
+      }
+    }
+      
+  
 });
 
 
@@ -212,55 +229,6 @@ app.get('/logout', function(req, res){
   req.logout();
   res.redirect('/');
 });
-
-//get DJ playback information
-let current_position;
-let current_track;
-
-app.get('/syncDJ', function(req, res){
-  	const user_id = req.user.id;
-  	client.get(user_id, (err,data) => {
-		axios({
-			method: "GET",
-			url: `https://api.spotify.com/v1/me/player`,
-			headers: {Authorization: "Bearer " + data},
-		})
-		.then(function(response){
-			current_position = response.data.progress_ms;
-			current_track = response.data.item.id;
-			console.log("current playback information grabbed!")
-      console.log(current_position);
-      res.json(null) 
-		})
-		.catch((err) => console.log('error occurred', err))
- 	 })
-})
-
-//sync with the same song as DJ
-app.get('/syncParty', function(req, res){
-	let user_id = req.user.id;
-	client.get(user_id, (err, data) => {
-		axios({
-			method: "PUT",
-			url: `https://api.spotify.com/v1/me/player/play`,
-			headers: {Authorization: "Bearer " + data},
-			data: {"uris": [`spotify:track:${current_track}`]}
-		}, console.log(data))
-		.then(function(response){
-			axios({
-				method: "PUT",
-				url: `https://api.spotify.com/v1/me/player/seek?position_ms=${current_position}`,
-				headers: {Authorization: "Bearer " + data},
-			})
-			.then(function(response){
-        console.log("synced with DJ!")
-        res.json(null) 
-			})
-			.catch((err) => console.log('error occurred', err))
-		})
-		.catch((err) => console.log('error occurred', err))
-	})
-})
 
 
 //play button 
@@ -276,7 +244,9 @@ app.get('/play', function(req, res){
       headers: {Authorization: "Bearer "+ data}
 
     }).then(function(response){
-      console.log('play button is working !')
+      console.log(`play button is working ! ${user_id}`)
+      
+      return user_id;
       //use send and render if need to refresh page
       res.json(null) //server-side ajax //use ajax here if dont want to refresh page 
     }).catch((err) =>{
@@ -570,7 +540,132 @@ function getSpotifySong(uri, res) {
       .catch(err => console.log(err));
 }
 
+//get DJ playback information - by KayKay
+var current_position;
+var current_track_id;
+var current_track_name;
+var current_album_art;
+var current_track_isPlaying;
+var current_track_artist;
+var current_track_duration;
 
+app.get('/syncDJ', function(req, res){
+  const user_id = req.user.id;
+  
+  client.get(user_id, (err,data) => {
+  
+  axios({
+    method: "GET",
+    url: `https://api.spotify.com/v1/me/player/currently-playing`,
+    headers: {Authorization: "Bearer " + data},
+  })
+  .then(function(response){
+    console.log(`in syncDJ get: ${response}`)
+    current_position = response.data.progress_ms;
+    current_track_id = response.data.item.id;
+    current_track_name = response.data.item.name;
+    current_album_art = response.data.item.album.images[0].url;
+    current_track_duration = response.data.item.duration;
+    current_track_artist = response.data.item.artists[0].name;
+    current_track_isPlaying = response.data.item.is_playing;
+
+    console.log("current playback information grabbed!");
+    res.json({"songName": current_track_name, "songArt": current_album_art, "songPosition": current_position, "songDuration": current_track_duration, "songArtist": current_track_artist, "songIsPlaying": current_track_isPlaying});
+  })
+  .catch((err) => console.log('error occurred', err))
+  })
+})
+
+
+app.get('/syncParty', function(req, res){
+  let user_id = req.user.id;
+  
+   //final lag time is minus the get request above
+   var final_lag = (Date.now() - res.data.date)/1000
+   var final_seek_time = current_position + final_lag
+   console.log(`The final seektime is: ${final_seek_time} with lag of: ${final_lag}`)
+
+	client.get(user_id, (err, data) => {
+		axios({
+			method: "PUT",
+			url: `https://api.spotify.com/v1/me/player/play`,
+			headers: {Authorization: "Bearer " + data},
+			data: {"uris": [`spotify:track:${current_track_id}`]}
+		}, console.log(data))
+		.then(function(response){
+			axios({
+				method: "PUT",
+				url: `https://api.spotify.com/v1/me/player/seek?position_ms=${final_seek_time}`,
+				headers: {Authorization: "Bearer " + data},
+			})
+			.then(function(response){
+        console.log("synced with DJ!")
+        res.json(null) 
+			})
+			.catch((err) => console.log('error occurred', err))
+		})
+		.catch((err) => console.log('error occurred', err))
+	})
+})
+
+// exports.DJsync = function(id){
+//     const user_id = id;
+//     console.log(`djsync: ${user_id}`)
+//   	client.get(user_id, (err,data) => {
+// 		axios({
+// 			method: "GET",
+// 			url: `https://api.spotify.com/v1/me/player/currently-playing`,
+// 			headers: {Authorization: "Bearer " + data},
+// 		})
+// 		.then(function(response){
+// 			current_position = response.data.progress_ms;
+//       current_track_id = response.data.item.id;
+//       current_track_name = response.data.item.name;
+// 			current_album_art = response.data.item.album.images[0].url;
+// 			current_track_duration = response.data.item.duration;
+// 			current_track_artist = response.data.item.artists[0].name;
+// 			current_track_isPlaying = response.data.item.is_playing;
+
+// 			console.log("current playback information grabbed!");
+//       //res.json({"songName": current_track_name, "songArt": current_album_art, "songPosition": current_position, "songDuration": current_track_duration, "songArtist": current_track_artist, "songIsPlaying": current_track_isPlaying});
+//       })
+// 		.catch((err) => console.log('error occurred', err))
+//  	 })
+// }
+
+
+// //sync with the same song as DJ
+// exports.syncParty = function(lagtime, id){
+//   let user_id = id;
+//   console.log(`syncParty id: ${user_id}, lag: ${lagtime}` )
+// 	client.get(user_id, (err, data) => {
+// 		axios({
+// 			method: "PUT",
+// 			url: `https://api.spotify.com/v1/me/player/play`,
+// 			headers: {Authorization: "Bearer " + data},
+// 			data: {"uris": [`spotify:track:${current_track}`]}
+// 		}, console.log(data))
+// 		.then(function(response){
+
+//       //final lag time is minus the get request above
+//       var final_lag = (Date.now() - lagtime)/1000
+//       var final_seek_time = current_position + final_lag
+//       console.log(`The final seektime is: ${final_seek_time} with lag of: ${final_lag}`)
+// 			axios({
+// 				method: "PUT",
+// 				url: `https://api.spotify.com/v1/me/player/seek?position_ms=${final_seek_time}`,
+// 				headers: {Authorization: "Bearer " + data},
+// 			})
+// 			.then(function(response){
+//         console.log("synced with DJ!")
+//         //res.json(null)
+//         return Date.now(); 
+// 			})
+// 			.catch((err) => console.log('error occurred', err))
+// 		})
+// 		.catch((err) => console.log('error occurred', err))
+// 	})
+// }
 
 http.listen(3000);
 

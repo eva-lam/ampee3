@@ -24,14 +24,28 @@ $("#play_button").click(function(){
 	$.ajax({
         type: 'GET',
         url: '/play',
-		}).done(function(data) {
+		}).success(function(user_id) {
 			if ( data != null ) {
 			//DOM manipulation ""->refers to tag on html
 			//".friends" refers to class in css
 			//"#friends refers to id in css
 			$("#error").html( "You might need to be a premium member to access this feature" );
 			}
-		});
+
+			$.ajax({
+				type: 'GET',
+				url: '/syncDJ',
+				data: {}
+				}).done(function( data ) {
+					if (data != null) {
+					$("#error").html( "You might need to be a premium member to access this feature" );  
+					}
+					socket.emit('sf_play', Date.now(), data)
+					console.log(`emitted the first date time: ${Date.now()}`)
+			});
+			
+	});
+	
 })
 
 $("#pause_button").click(function(){
@@ -46,26 +60,28 @@ $("#pause_button").click(function(){
 })
 
 $("#sync_dj").click(function(){
-	$.ajax({
-        type: 'GET',
-		url: '/syncDJ',
-		data: {}
-		}).done(function( data ) {
-			if (data != null) {
-			$("#error").html( "You might need to be a premium member to access this feature" );  
-			}
-		});
+	// $.ajax({
+    //     type: 'GET',
+	// 	url: '/syncDJ',
+	// 	data: {}
+	// 	}).done(function( data ) {
+	// 		if (data != null) {
+	// 		$("#error").html( "You might need to be a premium member to access this feature" );  
+	// 		}
+	// 		socket.emit('sf_play', Date.now())
+	// 		console.log(`emitted the first date time: ${Date.now()}`)
+	// 	});
 })
 
 $("#sync_party").click(function(){
-	$.ajax({
-        type: 'GET',
-        url: '/syncParty',
-		}).done(function( data ) {
-			if (data != null) {
-			$("#error").html( "You might need to be a premium member to access this feature" );  
-			}
-		});
+	// $.ajax({
+    //     type: 'GET',
+    //     url: '/syncParty',
+	// 	}).done(function( data ) {
+	// 		if (data != null) {
+	// 		$("#error").html( "You might need to be a premium member to access this feature" );  
+	// 		}
+	// 	});
 })
 
 $("#search_btn").click(function(){
