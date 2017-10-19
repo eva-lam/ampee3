@@ -1,5 +1,5 @@
 const API_KEY = 'AIzaSyCc978T5frQ3BZzn7CXoUuLaZfTJi2UjOE'
-
+//var socket;
 function tplawesome(e, t) {res = e; for (var n = 0; n < t.length; n++) {res = res.replace(/\{\{(.*?)\}\}/g, function (e, r) {return t[n][r]})}return res}
 
 // search-res-container: search and render song info into search result container
@@ -40,37 +40,34 @@ $(function () {
 	})
 })
 
-
 // playlist: render song detail into playlist
 $(function () { 
-	var socket = io(); 
+	//kevin: turn off socket.io
+	//socket = io(); 
 	//take the message from from when submit are click
 	$('body').delegate('.addSongBtn', 'click',function(){
-		var roomID = 'watson' // assing a string for testing
+		// preparing data for emit
+		var roomID = $('.roomInfo').attr('roomid')
 		var videoID = $(this).parent().attr('id')
 		if(!videoID) throw new Error('cannot get video id')
 		var videoTitle = $(`#${videoID} .title`).text()
 		var thumbnailUrl = $(`#${videoID} .thumbnail`).attr('src')
 		var duration = $(`#${videoID} .duration`).text()
-		console.log(`A video is added into DB of ${roomID}'s room. videoID: ${videoID} title:${videoTitle} thumbnailUrl: ${thumbnailUrl} duration: ${duration}`)
-		socket.emit('sendSongToDB', videoID, videoTitle, thumbnailUrl, duration, roomID)
-	})
-	socket.on('addSongToPlaylist', (videoID, videoTitle, thumbnailUrl, duration)=>{
-		console.log(`Playlist successfully receive: id: ${videoID}  title: ${videoTitle} thumbnail:${thumbnailUrl} and duration: ${duration}`)
-		$.get("partial-html/videos-on-playlist.html", function(template){
-			$("#playlist").append(tplawesome(
-				template, [{
-					"title": videoTitle,
-					"videoID": videoID,
-					"duration": duration
-				}]
-			))
-		}).then(()=>{
-			console.log(` ${videoTitle} is added into the playlist`)
-		})
+		// emit 
+		socket.emit(
+			'addSongToPlaylist',
+			videoID, videoTitle, thumbnailUrl, duration, roomID,
+		)
+		socket.emit('djRoom', videoID)
+			console.log(`A video is added into DB of ${roomID}'s room. videoID: ${videoID} title:${videoTitle} thumbnailUrl: ${thumbnailUrl} duration: ${duration}`)
+	
+		//kevin: play video after list created	
+		player.cueVideoById(videoID)
+		player.playVideo();
+		console.log("player should play")
+	
 	})
 })
-
 
 function askDurationOfVideo(id, cb){
 	var duration
@@ -82,8 +79,6 @@ function askDurationOfVideo(id, cb){
 		// console.log(`Duration of video id:${id} is ${duration}`)
 	})
 }
-
-
 
 function convertTime(duration) {
     var a = duration.match(/\d+/g);

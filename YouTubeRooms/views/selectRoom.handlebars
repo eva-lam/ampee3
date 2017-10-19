@@ -1,0 +1,33 @@
+
+<style>
+    h4{color:white}
+</style>
+
+<div class="container"></div>
+<div class="row text-center">
+    <h2>DJ list</h2>
+    <a href="/">
+        <button type="button" class="btn btn-danger">Go Back</button>
+    </a>
+
+    
+</div>
+<div class="row text-center">
+    <h2>This is DJ list</h2>
+    {{#dj}}
+    <div class="row" style = "min-height:75px;padding: 50px,10px;color:chocolate">
+        <div class="col-xs-12 col-sm-2"></div>
+        <div class="col-xs-12 col-sm-8">
+            <div class="row text-center">
+                <h4><small>here should show video</small></h4>
+            </div>
+            <div class="row text-center">
+                <h4  style="{color:white}"><a href="/dj/{{this.[0]}}">Room: {{this.[0]}}, DJ: {{this.[1]}}</a></h4>
+            </div>
+        </div>
+        <div class="col-xs-12 col-sm-2"></div>
+    </div>
+    {{/dj}}
+</div>
+
+</div>
