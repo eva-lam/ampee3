@@ -16,7 +16,7 @@ let URL = 'http://localhost:8080';
 //here we import dotenv, env must store in root directory
 //we don't assign it as variable since we don't need them anymore afterwards
 require('dotenv').config()
-require('./server_socket.js')(http); 
+
 
 
 const redis = require('redis');
@@ -30,6 +30,7 @@ client.on('error', function(err){
     console.log(err);
 });
 
+require('./server_socket.js')(http,client); 
 
 // io.on('connection', (socket)=>{
 
@@ -87,7 +88,7 @@ passport.deserializeUser(function(obj, done) {
 passport.use(new SpotifyStrategy({
   clientID: process.env.APP_KEY,
   clientSecret: process.env.APP_SECRET,
-  callbackURL: 'http://104.236.135.26/callback'
+  callbackURL: 'http://localhost:3000/callback'
   },
   function(accessToken, refreshToken, profile, done) {
     // asynchronous verification, for effect...
