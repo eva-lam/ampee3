@@ -79,14 +79,14 @@ $("#sync_dj").click(function(){
 })
 
 $("#sync_party").click(function(){
-	// $.ajax({
-    //     type: 'GET',
-    //     url: '/syncParty',
-	// 	}).done(function( data ) {
-	// 		if (data != null) {
-	// 		$("#error").html( "You might need to be a premium member to access this feature" );  
-	// 		}
-	// 	});
+	$.ajax({
+        type: 'GET',
+        url: '/syncParty',
+		}).done(function( data ) {
+			if (data != null) {
+			$("#error").html( "You might need to be a premium member to access this feature" );  
+			}
+		});
 })
 
 $("#search_btn").click(function(){
