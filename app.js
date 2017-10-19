@@ -494,6 +494,7 @@ app.get('/youtube', (req, res)=>{
 })
 
 app.get('/selectRoom', (req, res)=>{
+  var room = [[]];
     for (var user in USER_INFO){ 
         if(USER_INFO[user][1] === 'd'){
             room.push([USER_INFO[user][0], x])
