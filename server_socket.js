@@ -1,6 +1,6 @@
-module.exports = function (http, client) {
+module.exports = function (http, client, USER_INFO) {
     const ioo = require('socket.io')(http);
-    var USER_INFO = {}
+    
 
     var io = ioo.of('/djroom');
     io.on('connection', (socket) => {
@@ -11,10 +11,7 @@ module.exports = function (http, client) {
         socket.on('new room', (room, program) => {
             socket.join(room, () => {
                 let id_room_pair = Object.keys(socket.rooms); // [ <socket.id>, 'room 237' ]
-                // let user_id = id_room_pair[0].substring(8, id_room_pair[0].length)
-                // let user_room = id_room_pair[1]
-                // let user_type = 'd'
-                // let user_program = 'sportify'
+                
                 USER_INFO[id_room_pair[0].substring(8, id_room_pair[0].length)] = [id_room_pair[1], 'd', program];    //'d' is dj
                 for (x in USER_INFO) { console.log(`dj info ${x} in room: ${USER_INFO[x]}`) }; // actual info
 
