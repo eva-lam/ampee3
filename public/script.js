@@ -38,18 +38,18 @@ $("#play_button").click(function(){
 
 			socket.emit('sf_play', Date.now(), user_id)
 			console.log(`emitted the first date time: ${Date.now()}, id: ${user_id}`)
-		});
-		$.ajax({
-			type: 'GET',
-			url: '/syncDJ',
-			data: {}
-			}).done(function( data ) {
-				if (data != null) {
-				$("#error").html( "You might need to be a premium member to access this feature" );  
-				}
-				socket.emit('sf_play', Date.now(), data)
-				console.log(`emitted the first date time: ${Date.now()}`)
-		});
+	});
+	$.ajax({
+		type: 'GET',
+		url: '/syncDJ',
+		data: {}
+		}).done(function( data ) {
+			if (data != null) {
+			$("#error").html( "You might need to be a premium member to access this feature" );  
+			}
+			socket.emit('sf_play', Date.now(), data)
+			console.log(`emitted the first date time: ${Date.now()}`)
+	});
 })
 
 $("#pause_button").click(function(){
@@ -78,14 +78,14 @@ $("#sync_dj").click(function(){
 })
 
 $("#sync_party").click(function(){
-	$.ajax({
-        type: 'GET',
-        url: '/syncParty',
-		}).done(function( data ) {
-			if (data != null) {
-			$("#error").html( "You might need to be a premium member to access this feature" );  
-			}
-		});
+	// $.ajax({
+    //     type: 'GET',
+    //     url: '/syncParty',
+	// 	}).done(function( data ) {
+	// 		if (data != null) {
+	// 		$("#error").html( "You might need to be a premium member to access this feature" );  
+	// 		}
+	// 	});
 })
 
 $("#search_btn").click(function(){
