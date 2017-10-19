@@ -24,7 +24,7 @@ $("#play_button").click(function(){
 	$.ajax({
         type: 'GET',
         url: '/play',
-		}).success(function(user_id) {
+		}).complete(function(user_id) {
 			if ( data != null ) {
 			//DOM manipulation ""->refers to tag on html
 			//".friends" refers to class in css
