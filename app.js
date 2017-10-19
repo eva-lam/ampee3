@@ -551,8 +551,9 @@ var current_track_duration;
 
 app.get('/syncDJ', function(req, res){
   const user_id = req.user.id;
-  console.log(`in syncDJ get: ${user_id}`)
+  
   client.get(user_id, (err,data) => {
+  console.log(`in syncDJ get: ${data}`)
   axios({
     method: "GET",
     url: `https://api.spotify.com/v1/me/player/currently-playing`,
