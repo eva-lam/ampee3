@@ -136,6 +136,10 @@ app.get('/', function(req, res){
   res.render('index')
 });
 
+app.get('/rooms',function(req,res){
+  res.render('rooms')
+});
+
 app.get('/account', ensureAuthenticated, function(req, res){
   res.render('account', { user: req.user });
 });
@@ -143,6 +147,7 @@ app.get('/account', ensureAuthenticated, function(req, res){
 app.get('/login', function(req, res){
   res.render('login', { user: req.user });
 });
+
 
 app.get('/joinparty',function(req,res){
   res.render('joinparty')
@@ -163,8 +168,13 @@ app.get('/auth/spotify',
 app.get('/callback',
   passport.authenticate('spotify', { failureRedirect: '/login' }),
   function(req, res) {
-    res.redirect('account');
+    res.redirect('choose');
   });
+
+app.get('/choose',function(req,res){
+  res.render('choose')
+});
+
 
 //app.METHOD(PATH, HANDLER)
 //HANDLER is function executed when the route is matched.
@@ -334,6 +344,7 @@ app.post('/createplaylist',function(req,res){
     data:{"name":listname,"public":false} //for passing to the body 
   })
   .then(function(response){
+    console.log(response)
     console.log("playlist created!")
     const playlist_id = response.data.id
         client.set("New Playlist",playlist_id, function(err, data) {
@@ -346,13 +357,28 @@ app.post('/createplaylist',function(req,res){
           if(err) {
           return console.log(err);
           }
-        })
-        
-     res.render('account',{"name":listname,"listid":playlist_id})
+        }) 
+
+     res.json({"name":listname,"listid":playlist_id})
   }).catch((err) =>console.log('error occurs',err))
   })
 });
 
+// client.get("New Playlist", function(err, data1) {
+//   console.log(data1); 
+//   if(err) {
+//     return console.log(err);
+//   }
+
+//   client.get("playlistname", function(err, data2) {
+//       console.log(data2); 
+//       if(err) {
+//         return console.log(err);
+//       }
+//       res.json({"songlist":song_id,"name":data2,"listid":data1})
+//     })
+// })
+// }).catch((err) =>console.log('search error occurs',err))
 
 app.post('/searchtrack',function(req,res){
   const item = req.body.search_track
