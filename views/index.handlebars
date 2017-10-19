@@ -19,16 +19,26 @@
 <br>
 <a href="/login"><img src="playbutton.png" width="200px"></a>
 
+<script src="https://code.jquery.com/jquery-3.2.1.min.js"integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.20.2/TweenMax.min.js"></script> 
 <script>
-	  TweenMax.to("img", 6,{
-                x: Math.random()*20,
-                y: Math.random()*20,
-                opacity: 0.4,
+	  TweenMax.to("img", 0.5,{
+                x: Math.random()*10,
+                y: Math.random()*10,
+                opacity: 0.7,
                 repeat: -1, 
 				yoyo: true, 
 				ease: Elastic.easeNone,
-				scale:Math.random()* 1.4
+				scale: 1.1
                 
-            });	
+            });
+
+		$('img').hover(()=>{
+			 TweenMax.to("img", 0.5,{
+                rotation: 360,
+                repeat: -1, 
+				ease: Elastic.easeNone,
+				
+			})
+		})
 </script> 
