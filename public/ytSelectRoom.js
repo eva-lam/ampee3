@@ -6,7 +6,7 @@ $(function(){
 	$('#refreshBtn').on('click', function(){
 		console.log('refreshing room-boxes')
 		$('#allRooms').html('')
-		socket.emit('findingAllRooms')
+		socket.emit('loadingYoutubeSelectRoomPage')
 	})
 
 	// once the page finishes loading, request room info from server
@@ -25,5 +25,6 @@ $(function(){
 		}).then(()=>{
 			console.log(`built a room box for ${roomID}'s room`)
 		})
+			socket.emit('SelectRoomfullyloaded')
 	})
 })

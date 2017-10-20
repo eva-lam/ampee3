@@ -104,17 +104,17 @@ socket.on('chat message', (msg) => {
     }
 })
 
-function fire_client() {
+// function fire_client() {
 
-    var stop_si = setInterval(() => {
-        $('#fire').html(`<h3 style="color: white">Fire Time ${player.getCurrentTime()} </p></h3>`)
-        socket.emit('FIRE', `${player.getCurrentTime()}D${Date.now()}`)
+//     var stop_si = setInterval(() => {
+//         $('#fire').html(`<h3 style="color: white">Fire Time ${player.getCurrentTime()} </p></h3>`)
+//         socket.emit('FIRE', `${player.getCurrentTime()}D${Date.now()}`)
 
-    }, 150)
-    setTimeout(() => {
-        clearInterval(stop_si)
-    }, 3500)
-}
+//     }, 150)
+//     setTimeout(() => {
+//         clearInterval(stop_si)
+//     }, 3500)
+// }
 
 
 
