@@ -9,22 +9,6 @@ module.exports = function (http, client, USER_INFO) {
 
         var current_room;
 
-        // always having one song in YTlists table
-        // AM3_YTlist.findOne({
-        //     where: {
-        //         DJ_room: 'InCaseOfClash'
-        //     }
-        // }).then((data)=>{
-        //     if (!data) return
-        //     AM3_YTlist.create({
-        //         YT_video_id: 'h--P8HzYZ74',
-        //         YT_title: 'Zedd, Alessia Cara - Stay (Lyric Video)',
-        //         YT_video_thumbnailurl: 'https://i.ytimg.com/vi/h--P8HzYZ74/default.jpg',
-        //         YT_video_duration: '3:33',
-        //         DJ_room: 'InCaseOfClash'
-        //     })
-        // })
-
         //dj room creation and register DJ
         socket.on('new room', (room, program) => {
             socket.join(room, () => {
