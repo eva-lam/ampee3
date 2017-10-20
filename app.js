@@ -569,7 +569,8 @@ app.get('/syncDJ', function(req, res){
 
     console.log("current playback information grabbed!");
     
-    res.json({"songName": current_track_name, "songArt": current_album_art, "songPosition": current_position, "songDuration": current_track_duration, "songArtist": current_track_artist, "songIsPlaying": current_track_isPlaying});
+    //res.json({"songName": current_track_name, "songArt": current_album_art, "songPosition": current_position, "songDuration": current_track_duration, "songArtist": current_track_artist, "songIsPlaying": current_track_isPlaying});
+    res.json({"songName": current_track_name, "songArt": current_album_art, "songPosition": current_position, "songDuration": current_track_duration, "songArtist": current_track_artist, "songIsPlaying": current_track_isPlaying, "songID": current_track_id})
   })
   .catch((err) => console.log('error occurred', err))
   })
@@ -581,15 +582,16 @@ app.get('/syncParty', function(req, res){
   
    //final lag time is minus the get request above
    var final_lag = (Date.now() - res.data.date)/1000
-   var final_seek_time = current_position + final_lag
+   var final_seek_time = res.data.info.songDuration + final_lag
    console.log(`The final seektime is: ${final_seek_time} with lag of: ${final_lag}`)
+   console.log(`final-flight data send is: ${res.data.info.songDuration} and ${res.data.info.songID}`)
 
 	client.get(user_id, (err, data) => {
 		axios({
 			method: "PUT",
 			url: `https://api.spotify.com/v1/me/player/play`,
 			headers: {Authorization: "Bearer " + data},
-			data: {"uris": [`spotify:track:${current_track_id}`]}
+			data: {"uris": [`spotify:track:${res.data.info.songID}`]}
 		}, console.log(data))
 		.then(function(response){
 			axios({
@@ -599,7 +601,7 @@ app.get('/syncParty', function(req, res){
 			})
 			.then(function(response){
         console.log("synced with DJ!")
-        res.json(null) 
+        res.json({}) 
 			})
 			.catch((err) => console.log('error occurred', err))
 		})
