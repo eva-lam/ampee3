@@ -573,7 +573,7 @@ app.get('/syncDJ', function(req, res){
     current_track_duration = response.data.item.duration;
     current_track_artist = response.data.item.artists[0].name;
     current_track_isPlaying = response.data.item.is_playing;
-    current_track_playlist = response.data.item.content.uri.substr(30);
+    //current_track_playlist = response.data.item.content.uri.substr(30);
     console.log("current playback information grabbed!");
     
     //res.json({"songName": current_track_name, "songArt": current_album_art, "songPosition": current_position, "songDuration": current_track_duration, "songArtist": current_track_artist, "songIsPlaying": current_track_isPlaying});
