@@ -107,24 +107,24 @@ socket.on('chat message', (msg) => {
     }
 })
 
-// function fire_client() {
+function fire_client() {
 
-//     var stop_si = setInterval(() => {
-//         $('#fire').html(`<h3 style="color: white">Fire Time ${player.getCurrentTime()} </p></h3>`)
-//         socket.emit('FIRE', `${player.getCurrentTime()}D${Date.now()}`)
+    var stop_si = setInterval(() => {
+        $('#fire').html(`<h3 style="color: white">Fire Time ${player.getCurrentTime()} </p></h3>`)
+        socket.emit('FIRE', `${player.getCurrentTime()}D${Date.now()}`)
 
-//     }, 150)
-//     setTimeout(() => {
-//         clearInterval(stop_si)
-//     }, 3500)
-// }
+    }, 150)
+    setTimeout(() => {
+        clearInterval(stop_si)
+    }, 3500)
+}
 
 
 
-// setInterval(() => {
-//     $('#info').html(`<h3 style="color: white">currentTime ${player.getCurrentTime()} </p></h3>`)
-//     socket.emit('CHECKING', player.getCurrentTime())
-// }, 1000)
+setInterval(() => {
+   // $('#info').html(`<h3 style="color: white">currentTime ${player.getCurrentTime()} </p></h3>`)
+    socket.emit('CHECKING', player.getCurrentTime())
+}, 1000)
 
 //dj stop, client stop also
 function onPlayerStateChange(e) {

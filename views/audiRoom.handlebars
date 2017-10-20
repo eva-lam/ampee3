@@ -155,19 +155,21 @@
                 console.log(`time:${msg} lag: ${lag} lag_before: ${lagdiff}`)
                 lagdiff = Math.abs(lag_before -lag)
                 if ( lagdiff < 0.1){
-                    console.log('small lag!!!', restarted)
-                     if(Math.abs(start_time -lag - lagdiff - msg) < 0.3) {
-                    $(`<div style="display: none;"><p style="color: white">PLAY!</p></div>`).appendTo($('.msgbox')).show(300);
+                    console.log(`small lag!!! ${start_time}, ${msg}, ${lag} `)
+                    // if((start_time -lag - lagdiff - msg) < 1) {
+                     if((start_time -lag - msg) < 2) {
+                    //$(`<div style="display: none;"<p style="color: white">PLAY!</p></div>`).appendTo($('.msgbox')).show(300);
+                    console.log("play");
                     //fine tune loading diff in computer 150ms
-                    setTimeout(()=>{ player.playVideo();},100)
+                    setTimeout(()=>{ player.playVideo();},500)
                     
-                    //player.playVideo();
+                    player.playVideo();
                     restarted = false;
                      }else if(player.getCurrentTime() < msg && restarted){
                         
-                        //player.pauseVideo();
-                        //socket.emit('chat message', 'REREQUEST')
-                        //console.log('EMITTED')
+                        player.pauseVideo();
+                        socket.emit('chat message', 'REREQUEST')
+                        console.log('EMITTED')
                         restarted = false;
 
                      }
@@ -179,7 +181,8 @@
 
 
         setInterval(() => {
-            $('#info').html(`<h3 style="color: white">currentTime ${player.getCurrentTime()} time difference: ${chk_time - player.getCurrentTime() + lag} </p></h3>`)
+            //$('#info').html(`<h3 style="color: white">currentTime ${player.getCurrentTime()} time difference: ${chk_time - player.getCurrentTime() + lag} </p></h3>`)
+            console.log(`currentTime ${player.getCurrentTime()} time difference: ${chk_time - player.getCurrentTime() + lag}`)
         }, 1000)
 
 
