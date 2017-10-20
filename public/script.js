@@ -23,15 +23,14 @@ $("#play_button").click(function(){
 	//ajax
 	$.ajax({
         type: 'GET',
-        url: '/play',
-		}).success(function(user_id) {
+		url: '/play',
+		
+		}).done(function(data){
 			if ( data != null ) {
 			//DOM manipulation ""->refers to tag on html
 			//".friends" refers to class in css
 			//"#friends refers to id in css
 			$("#error").html( "You might need to be a premium member to access this feature" );
-			}
-
 			$.ajax({
 				type: 'GET',
 				url: '/syncDJ',
@@ -40,13 +39,21 @@ $("#play_button").click(function(){
 					if (data != null) {
 					$("#error").html( "You might need to be a premium member to access this feature" );  
 					}
+					console.log(`data_ID: ${data.songID}, data_duration: ${data.songDuration}` )
 					socket.emit('sf_play', Date.now(), data)
 					console.log(`emitted the first date time: ${Date.now()}`)
-			});
+		
+			}, 2000);
+		
+			}
+		})
+
 			
 	});
+
+
 	
-})
+
 
 $("#pause_button").click(function(){
 	$.ajax({
@@ -59,29 +66,32 @@ $("#pause_button").click(function(){
 		});
 })
 
+
 $("#sync_dj").click(function(){
-	// $.ajax({
-    //     type: 'GET',
-	// 	url: '/syncDJ',
-	// 	data: {}
-	// 	}).done(function( data ) {
-	// 		if (data != null) {
-	// 		$("#error").html( "You might need to be a premium member to access this feature" );  
-	// 		}
-	// 		socket.emit('sf_play', Date.now())
-	// 		console.log(`emitted the first date time: ${Date.now()}`)
-	// 	});
+	$.ajax({
+        type: 'GET',
+		url: '/syncDJ',
+		contentType: 'application/json',
+		}).done(function(data) {
+			if (data) {
+				$('.progress_bar').css('width', `(${data.songPosition} / ${data.songDuration} * 100)%`);
+				$('.background').css('background-image', `url(${data.songArt}`);
+				$('.now_playing_artist').append('<span>' + data.songArtist + '</span>');
+				$('.now_playing_artist').append('<span> testing testing </span>');
+				$('.now_playing_name').append('<span>' + data.songName + '</span>');
+			}
+		});
 })
 
 $("#sync_party").click(function(){
-	// $.ajax({
-    //     type: 'GET',
-    //     url: '/syncParty',
-	// 	}).done(function( data ) {
-	// 		if (data != null) {
-	// 		$("#error").html( "You might need to be a premium member to access this feature" );  
-	// 		}
-	// 	});
+	$.ajax({
+        type: 'GET',
+        url: '/syncParty',
+		}).done(function( data ) {
+			if (data != null) {
+			$("#error").html( "You might need to be a premium member to access this feature" );  
+			}
+		});
 })
 
 $("#search_btn").click(function(){

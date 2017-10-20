@@ -53,15 +53,17 @@ module.exports = function (http, client, USER_INFO) {
 
 
 
-        //console.log(`A client is connected from Chrome. Total list ${CLIENT_ID.length}`);
+        // console.log(`A client is connected from Chrome. Total list ${CLIENT_ID.length}`);
         socket.on('disconnect', () => {
-            AM3_YTlist.destroy({
-                where: {
-                    DJ_room: USER_INFO[socket.id.substring(8, socket.id.length)][0]
-                }
-            })
-            console.log(`DJ: ${socket.id.substring(8, socket.id.length)} is gone from Chrome. Room: ${USER_INFO[socket.id.substring(8, socket.id.length)]} is closed. Total list ${Object.keys(USER_INFO).length}`)
-            delete USER_INFO[socket.id.substring(8, socket.id.length)]
+            if(USER_INFO[socket.id.substring(8, socket.id.length)]){
+                AM3_YTlist.destroy({
+                    where: {
+                        DJ_room: USER_INFO[socket.id.substring(8, socket.id.length)][0]
+                    }
+                })
+                console.log(`DJ: ${socket.id.substring(8, socket.id.length)} is gone from Chrome. Room: ${USER_INFO[socket.id.substring(8, socket.id.length)]} is closed. Total list ${Object.keys(USER_INFO).length}`)
+                delete USER_INFO[socket.id.substring(8, socket.id.length)]
+            }
         })
 
         //this 1 line will get the chat message from client
@@ -93,12 +95,12 @@ module.exports = function (http, client, USER_INFO) {
             //     lagtime = dj_data_info - dateinfo
             //     main_app.syncParty(lagtime, user_id)
             // })
-            lagtime = dj_data_info - dateinfo
+            lagtime = Date.now() - date_info
             io.to(current_room).emit('sf_play', lagtime, data);
         })
 
         socket.on('audiReqPlaylist', (roomID) => {
-            console.log(`e:audiReqPlaylist is working, requesting all songs of ${roomID}'s room `)
+            console.log(`------------running e:audiReqPlaylist------------`)
             AM3_YTlist.findAll({
                 where: {
                     DJ_room: roomID
@@ -107,14 +109,15 @@ module.exports = function (http, client, USER_INFO) {
                 console.log(`successfully retrieve ${data.length} song(s) from DB`)
                 data.forEach((song, index) => {
                     var title = song.YT_title.slice(0, 15)
-                    console.log(`now emit e:addSongToPlaylist for no. ${index+1}: ${title}... into playlist of Audience's browser`)
+                    console.log(`socket emit addSongToPlaylist for no. ${index+1}: ${title}... into playlist of Audience's browser`)
                     io.to(current_room).emit('addSongToPlaylist', song)
                 })
+                console.log('------------finish e:audiReqPlaylist------------')
             })
         })
 
         socket.on('sendSongToDB', (videoID, videoTitle, thumbnailUrl, duration, DJ_room) => {
-            console.log('running sendSongToDB')
+            console.log('------------running e:sendSongToDB------------')
             AM3_YTlist.create({
                 YT_video_id: videoID,
                 YT_title: videoTitle,
@@ -131,20 +134,21 @@ module.exports = function (http, client, USER_INFO) {
                     //console.log(data)
                     console.log(`ROOM: ${current_room}`)
                     io.to(current_room).emit('addSongToPlaylist', data.YT_video_id, data.YT_title, data.YT_video_thumbnailurl, data.YT_video_duration)
-                    console.log(`emit addSongToplaylist id: ${data.YT_video_id} title: ${data.YT_title} thumbnail: ${data.YT_video_thumbnailurl} duration: ${data.YT_video_duration}`)
+                    console.log(`socket emit addSongToplaylist, param: video key ${data.YT_video_id} title ${data.YT_title} duration ${data.YT_video_duration}`)
+                    console.log('------------finish e:sendSongToDB------------')
                 })
             })
         })
 
         socket.on('removeSongThatIsDone', (roomID, videoID) => {
-            console.log(`running e:removeSongThatIsDone with roomID ${roomID} and videoID ${videoID}`)
+            console.log(`------------running e:removeSongThatIsDone------------`)
             AM3_YTlist.findOne({
                 where: {
                     DJ_room: roomID,
                     YT_video_id: videoID
                 }
             }).then((data) => {
-                console.log('found the song that is done. It is indexed at ' + data.id + ' in DB')
+                console.log('found the song that is done. It is indexed at ' + data.id + ' in DB. Destroying...')
                 AM3_YTlist.destroy({
                     where: {
                         id: data.id
@@ -157,7 +161,7 @@ module.exports = function (http, client, USER_INFO) {
                         DJ_room: roomID,
                     }
                 }).then((data) => {
-                    console.log(data)
+                    if (data.length = 0) console.log(`No song left for ${roomID}'s room`); return ;
                     console.log(`${roomID} still has ${data.length} song(s)`)
                     data.forEach((song)=>{
                         io.to(current_room).emit(
@@ -173,6 +177,8 @@ module.exports = function (http, client, USER_INFO) {
                     console.log(`all songs of ${roomID} left in DB have been sent to client-side to append into #playlist div`)
                     AM3_YTlist.findOne({where: {DJ_room: roomID}}).then((data)=>{
                         io.to(current_room).emit('nextSong', data.YT_video_id)
+                        console.log('socket emit nextSong, param: \'YT_video_id\'')
+                        console.log('------------finish e:removeSongThatIsDone------------')
                     })
                 })
             })
@@ -180,31 +186,29 @@ module.exports = function (http, client, USER_INFO) {
 
 
 
-        socket.on('findingAllRooms', function () {
-            console.log('search who are dj in USER_INFO(obj)')
-            console.log(USER_INFO)
-            for (var user in USER_INFO) {
-                var user = USER_INFO[user]
-                if (user[1] === 'd') {
-                    console.log(user[0] + ' is a dj, now creating one room-box for his/her room')
-                    var roomID = user[0]
-                    console.log(AM3_YTlist.findOne({
-                        where: {
-                            DJ_room: roomID
-                        }
-                    }))
-                    AM3_YTlist.findOne({
-                        where: {
-                            DJ_room: roomID
-                        }
-                    }).then((data) => {
-                        var currSongID = data.YT_video_id
-                        io.to(current_room).emit('buildingRoomBox', roomID, currSongID)
-                    }).then(() => {
-                        console.log(`emitted buildingRoomBox for ${roomID}'s room`)
-                    })
+        socket.on('loadingYoutubeSelectRoomPage',  ()=>{
+            console.log('------------running e:loadingYoutubeSelectRoomPage------------')
+            var rooms = []
+            for (var user in USER_INFO){
+                if (USER_INFO[user][1] === 'd'){
+                    var roomID = USER_INFO[user][0]
+                    rooms.push(roomID)
                 }
             }
+            console.log(rooms)
+            for (var room in rooms){
+                // console.log(rooms[room] + ' is ' + typeof(rooms[room]))
+                AM3_YTlist.findOne({where: {DJ_room: rooms[room]}
+                }).then((currSong)=>{
+                    socket.emit('buildingRoomBox', currSong.DJ_room, currSong.YT_video_id)
+                })
+            }
+
         })
+        
+        socket.on('SelectRoomfullyloaded', ()=>{
+            console.log('------------finish e:loadingYoutubeSelectRoomPage------------')
+        })
+
     })
 }

@@ -14,7 +14,7 @@ $(function () {
 			q: encodeURIComponent($('#searchKeyword').val().replace(/&20/g), '+'),
 			maxResult: 10,
 			order: 'viewCount',
-			videoEmbeddable: 'true'
+			videoEmbeddable: 'true',
 		})
 		// execute the request
 		request.execute((response) => {
@@ -60,7 +60,7 @@ $(function () {
 			videoID, videoTitle, thumbnailUrl, duration, roomID,
 		)
 		socket.emit('djRoom', videoID)
-			console.log(`A video is added into DB of ${roomID}'s room. videoID: ${videoID} title:${videoTitle} thumbnailUrl: ${thumbnailUrl} duration: ${duration}`)
+		console.log(`A video is added into DB of ${roomID}'s room. videoID: ${videoID} title:${videoTitle} thumbnailUrl: ${thumbnailUrl} duration: ${duration}`)
 	
 		//kevin: play video after list created	
 		player.cueVideoById(videoID)

@@ -262,3 +262,41 @@ input[type=text] {
 #search_result{
     font-size: 12px;
 }
+
+/* by kaykay */
+div #dj_name {
+    font-size: 30px;
+    font-family: ‘Helvetica Neue’, ‘Arial’;
+    font-weight: 400;
+}
+
+#progress_full {
+    border: 0.15em solid #eee;
+    height: 1em;
+    width: 50%;
+    margin-top: 2%;
+}
+
+#progress_bar {
+    background-color: #eee;
+    border: 0.1em solid transparent;
+    height: 0.75em;
+}
+
+.control {
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: column;
+    align-items: center;
+}
+ 
+.background{
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    background-size: cover;
+    background-position: center center;
+    filter: blue(8em) opacity(0.6);
+    position: absolute;
+}

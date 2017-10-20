@@ -127,7 +127,7 @@
 
 
                     //make player ready on the next 5s interval, min wait 5sec
-                    start_time = parseFloat(msg) + 3;
+                    start_time = parseFloat(msg) + 5;
                     player.stopVideo()
                     console.log ("REREQEST SUCCESSFUL2")
                     player.seekTo(parseFloat(start_time), false)
@@ -154,7 +154,7 @@
 
                 console.log(`time:${msg} lag: ${lag} lag_before: ${lagdiff}`)
                 lagdiff = Math.abs(lag_before -lag)
-                if ( lagdiff < 0.05){
+                if ( lagdiff < 0.1){
                     console.log('small lag!!!', restarted)
                      if(Math.abs(start_time -lag - lagdiff - msg) < 0.3) {
                     $(`<div style="display: none;"><p style="color: white">PLAY!</p></div>`).appendTo($('.msgbox')).show(300);
@@ -165,9 +165,9 @@
                     restarted = false;
                      }else if(player.getCurrentTime() < msg && restarted){
                         
-                        player.pauseVideo();
-                        socket.emit('chat message', 'REREQUEST')
-                        console.log('EMITTED')
+                        //player.pauseVideo();
+                        //socket.emit('chat message', 'REREQUEST')
+                        //console.log('EMITTED')
                         restarted = false;
 
                      }

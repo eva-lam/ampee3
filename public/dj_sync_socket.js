@@ -1,6 +1,9 @@
 //define socket io at the begining
 var socket = io('/djroom');
 
+// playlist in client side of DJ
+var playlist = []
+
 $(document).ready(() => {
     $('#DJ_in').modal({
         backdrop: 'static',
@@ -104,17 +107,17 @@ socket.on('chat message', (msg) => {
     }
 })
 
-function fire_client() {
+// function fire_client() {
 
-    var stop_si = setInterval(() => {
-        $('#fire').html(`<h3 style="color: white">Fire Time ${player.getCurrentTime()} </p></h3>`)
-        socket.emit('FIRE', `${player.getCurrentTime()}D${Date.now()}`)
+//     var stop_si = setInterval(() => {
+//         $('#fire').html(`<h3 style="color: white">Fire Time ${player.getCurrentTime()} </p></h3>`)
+//         socket.emit('FIRE', `${player.getCurrentTime()}D${Date.now()}`)
 
-    }, 150)
-    setTimeout(() => {
-        clearInterval(stop_si)
-    }, 3500)
-}
+//     }, 150)
+//     setTimeout(() => {
+//         clearInterval(stop_si)
+//     }, 3500)
+// }
 
 
 
@@ -136,13 +139,17 @@ function onPlayerStateChange(e) {
         socket.emit('chat message', 'STOP')
     }
 
-    if(e.data === 0) {     
-        $('#playlist').html('')
+    if(e.data === 0) { 
         console.log('A song is done')
+        // clean up playlist
+        $('#playlist').html('')
+        // load the rest songs from DB
         var roomID = $('.roomInfo').attr('roomID')
         var videoID = player.getVideoData()['video_id']
         console.log('prepare data to remove it from DB. roomID: ' + roomID + ' videoId: ' + videoID)     
         socket.emit('removeSongThatIsDone', roomID, videoID)
+        // updating playlist arr in client side of DJ user
+        playlist.push(videoID)
     }
 
 }
@@ -159,7 +166,7 @@ socket.on('addSongToPlaylist', (videoID, videoTitle, thumbnailUrl, duration, roo
             }]
         ))
     }).then(()=>{
-        console.log(` ${videoTitle} is added into the playlist`)
+        console.log(`${videoTitle} is added into the playlist`)
         
         
     })
