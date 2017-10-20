@@ -588,11 +588,12 @@ app.get('/syncParty', function(req, res){
   let user_id = req.user.id;
   
    //final lag time is minus the get request above
-   var final_lag = (Date.now() - req.body.date)/1000
-   var final_seek_time = req.data.info.songDuration + final_lag
    console.log(`The final seektime is: ${final_seek_time} with lag of: ${final_lag}`)
    console.log(`final-flight data send is: ${req.body.info.songDuration} and ${req.body.info.songID}. Time: ${res.body.date}`)
 
+   var final_lag = (Date.now() - req.body.date)/1000
+   var final_seek_time = req.body.info.songDuration + final_lag
+   
 	client.get(user_id, (err, data) => {
 		axios({
 			method: "PUT",
