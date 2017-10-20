@@ -66,17 +66,20 @@ $("#pause_button").click(function(){
 		});
 })
 
+
 $("#sync_dj").click(function(){
 	$.ajax({
         type: 'GET',
 		url: '/syncDJ',
-		data: {}
-		}).done(function( data ) {
-			if (data != null) {
-			$("#error").html( "You might need to be a premium member to access this feature" );  
+		contentType: 'application/json',
+		}).done(function(data) {
+			if (data) {
+				$('.progress_bar').css('width', `(${data.songPosition} / ${data.songDuration} * 100)%`);
+				$('.background').css('background-image', `url(${data.songArt}`);
+				$('.now_playing_artist').append('<span>' + data.songArtist + '</span>');
+				$('.now_playing_artist').append('<span> testing testing </span>');
+				$('.now_playing_name').append('<span>' + data.songName + '</span>');
 			}
-			socket.emit('sf_play', Date.now())
-			console.log(`emitted the first date time: ${Date.now()}`)
 		});
 })
 
