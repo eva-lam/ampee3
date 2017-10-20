@@ -181,19 +181,19 @@ app.get('/dj/:id', (req, res)=>{
   if((req.params.id) === ''){
       res.send("you are going to room of nothing :(")
   }else{
-      for (var x in USER_INFO){
-        if(req.params.id === USER_INFO[x][0]){
+      // for (var x in USER_INFO){
+      //   if(req.params.id === USER_INFO[x][0]){
           
-          if(USER_INFO[x][2]=== 'sportify'){
+      //     if(USER_INFO[x][2]=== 'sportify'){
             
-          res.render('joinparty', {room: req.params.id})
-          }else{
-          res.render('audiRoom', {room: req.params.id})
-          }
-        }
-      }
+      //     res.render('joinparty', {room: req.params.id})
+      //     }else{
+      //     res.render('audiRoom', {room: req.params.id})
+      //     }
+      //   }
+      // }
     }
-      
+    res.render('joinparty', {room: req.params.id}) 
   
 });
 
