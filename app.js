@@ -223,7 +223,7 @@ app.get('/play', function(req, res){
       
       
       //use send and render if need to refresh page
-      res.json(null) //server-side ajax //use ajax here if dont want to refresh page 
+      res.json({}) //server-side ajax //use ajax here if dont want to refresh page 
     }).catch((err) =>{
       console.log('play button error',err)
       res.json(err)
