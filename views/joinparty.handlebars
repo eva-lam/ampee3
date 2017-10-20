@@ -63,6 +63,7 @@
     //socket.on('say', (msg)=>{$('#test').append(`<h3 style="color: white">Server say ${msg} </p></h3>`)})
 
     socket.on('sf_play', (date_info,data) => {
+        console.log(`join-party-client: ${date_info} time: ${data}`)
 
         $.ajax({
         type: 'POST',
