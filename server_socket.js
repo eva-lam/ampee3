@@ -9,6 +9,22 @@ module.exports = function (http, client, USER_INFO) {
 
         var current_room;
 
+        // always having one song in YTlists table
+        AM3_YTlist.findOne({
+            where: {
+                DJ_room: 'InCaseOfClash'
+            }
+        }).then((data)=>{
+            if (!data) return
+            AM3_YTlist.create({
+                YT_video_id: 'h--P8HzYZ74',
+                YT_title: 'Zedd, Alessia Cara - Stay (Lyric Video)',
+                YT_video_thumbnailurl: 'https://i.ytimg.com/vi/h--P8HzYZ74/default.jpg',
+                YT_video_duration: '3:33',
+                DJ_room: 'InCaseOfClash'
+            })
+        })
+
         //dj room creation and register DJ
         socket.on('new room', (room, program) => {
             socket.join(room, () => {
@@ -53,16 +69,18 @@ module.exports = function (http, client, USER_INFO) {
 
 
 
-        //console.log(`A client is connected from Chrome. Total list ${CLIENT_ID.length}`);
-        // socket.on('disconnect', () => {
-        //     AM3_YTlist.destroy({
-        //         where: {
-        //             DJ_room: USER_INFO[socket.id.substring(8, socket.id.length)][0]
-        //         }
-        //     })
-        //     console.log(`DJ: ${socket.id.substring(8, socket.id.length)} is gone from Chrome. Room: ${USER_INFO[socket.id.substring(8, socket.id.length)]} is closed. Total list ${Object.keys(USER_INFO).length}`)
-        //     delete USER_INFO[socket.id.substring(8, socket.id.length)]
-        // })
+        // console.log(`A client is connected from Chrome. Total list ${CLIENT_ID.length}`);
+        socket.on('disconnect', () => {
+            if(USER_INFO[socket.id.substring(8, socket.id.length)]){
+                AM3_YTlist.destroy({
+                    where: {
+                        DJ_room: USER_INFO[socket.id.substring(8, socket.id.length)][0]
+                    }
+                })
+                console.log(`DJ: ${socket.id.substring(8, socket.id.length)} is gone from Chrome. Room: ${USER_INFO[socket.id.substring(8, socket.id.length)]} is closed. Total list ${Object.keys(USER_INFO).length}`)
+                delete USER_INFO[socket.id.substring(8, socket.id.length)]
+            }
+        })
 
         //this 1 line will get the chat message from client
         socket.on(('chat message'), (msg) => {
@@ -207,19 +225,6 @@ module.exports = function (http, client, USER_INFO) {
         socket.on('SelectRoomfullyloaded', ()=>{
             console.log('------------finish e:loadingYoutubeSelectRoomPage------------')
         })
-
-        // function findRoomIdFromUSER_INFO(){
-        //     console.log('testing')
-        //     var rooms = []
-        //     for (var user in USER_INFO){
-        //         if (USER_INFO[user][1] === 'd'){
-        //             var roomID = USER_INFO[user][0]
-        //             rooms.push(roomID)
-        //         }
-        //     }
-        //     console.log(rooms)
-        //     return rooms
-        // }
 
     })
 }

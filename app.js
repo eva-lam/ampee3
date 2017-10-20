@@ -34,9 +34,9 @@ client.on('error', function(err){
     console.log(err);
 });
 
-// var USER_INFO = {}
+var USER_INFO = {}
 // write for quick demo:
-var USER_INFO = {'12345678':['kk', 'd'], '87654321': ['wa', 'd'], 'abcdefgh':['eva', 'd']}
+// var USER_INFO = {'12345678':['kk', 'd'], '87654321': ['wa', 'd'], 'abcdefgh':['eva', 'd']}
 require('./server_socket.js')(http, client, USER_INFO);
 //USER_INFO: contain all socket-info
 
