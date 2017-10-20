@@ -111,7 +111,7 @@ module.exports = function (http, client, USER_INFO) {
             //     lagtime = dj_data_info - dateinfo
             //     main_app.syncParty(lagtime, user_id)
             // })
-            lagtime = dj_data_info - dateinfo
+            lagtime = Date.now() - date_info
             io.to(current_room).emit('sf_play', lagtime, data);
         })
 

@@ -8,7 +8,7 @@
 </style>
 
     <h3>Select the Room You Want to Join</h3>
-    <button id="refreshBtn">&#8634;</button>
+    <button id="re-syncParty">&#8634;</button>
 
 <div id="allRooms" class="container-fluid"></div>
 
@@ -60,7 +60,7 @@
 <script>
     var socket = io('/djroom');
     socket.emit('new client', '{{room}}', "sportify");
-    socket.on('say', (msg)=>{$('#test').append(`<h3 style="color: white">Server say ${msg} </p></h3>`)})
+    //socket.on('say', (msg)=>{$('#test').append(`<h3 style="color: white">Server say ${msg} </p></h3>`)})
 
     socket.on('sf_play', (date_info,data) => {
 
@@ -75,6 +75,22 @@
 		});
 
 
+    })
+
+    $('#re-syncParty').on('click', ()=>{
+        $.ajax({
+				type: 'GET',
+				url: '/syncDJ',
+				data: {}
+				}).done(function( data ) {
+					if (data != null) {
+					$("#error").html( "You might need to be a premium member to access this feature" );  
+					}
+					console.log(`data_ID: ${data.songID}, data_duration: ${data.songDuration}` )
+					socket.emit('sf_play', Date.now(), data)
+					console.log(`emitted the first date time: ${Date.now()}`)
+		
+			}, 2000);
     })
 
 </script>
