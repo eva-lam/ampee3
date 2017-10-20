@@ -181,19 +181,19 @@ app.get('/dj/:id', (req, res)=>{
   if((req.params.id) === ''){
       res.send("you are going to room of nothing :(")
   }else{
-      // for (var x in USER_INFO){
-      //   if(req.params.id === USER_INFO[x][0]){
+      for (var x in USER_INFO){
+        if(req.params.id === USER_INFO[x][0]){
           
-      //     if(USER_INFO[x][2]=== 'sportify'){
+          if(USER_INFO[x][2]=== 'sportify'){
             
-      //     res.render('joinparty', {room: req.params.id})
-      //     }else{
-      //     res.render('audiRoom', {room: req.params.id})
-      //     }
-      //   }
-      // }
+          res.render('joinparty', {room: req.params.id})
+          }else{
+          res.render('audiRoom', {room: req.params.id})
+          }
+        }
+      }
     }
-    res.render('joinparty', {room: req.params.id}) 
+    
   
 });
 
@@ -584,10 +584,11 @@ app.get('/syncDJ', function(req, res){
 })
 
 
-app.get('/syncParty', function(req, res){
+app.post('/syncParty', function(req, res){
   let user_id = req.user.id;
   
    //final lag time is minus the get request above
+   console.log(req.body);
    console.log(`The final seektime is: ${final_seek_time} with lag of: ${final_lag}`)
    console.log(`final-flight data send is: ${req.body.info.songDuration} and ${req.body.info.songID}. Time: ${res.body.date}`)
 

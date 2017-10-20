@@ -65,7 +65,7 @@
     socket.on('sf_play', (date_info,data) => {
 
         $.ajax({
-        type: 'GET',
+        type: 'POST',
         url: '/syncParty',
         data: {date: date_info, info: data}
 		}).done(function( data ) {
