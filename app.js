@@ -566,6 +566,7 @@ app.get('/syncDJ', function(req, res){
     current_track_isPlaying = response.data.item.is_playing;
 
     console.log("current playback information grabbed!");
+    
     res.json({"songName": current_track_name, "songArt": current_album_art, "songPosition": current_position, "songDuration": current_track_duration, "songArtist": current_track_artist, "songIsPlaying": current_track_isPlaying});
   })
   .catch((err) => console.log('error occurred', err))

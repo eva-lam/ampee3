@@ -43,6 +43,7 @@ $("#play_button").click(function(){
 					if (data != null) {
 					$("#error").html( "You might need to be a premium member to access this feature" );  
 					}
+					console.log(data)
 					socket.emit('sf_play', Date.now(), data)
 					console.log(`emitted the first date time: ${Date.now()}`)
 		
