@@ -588,17 +588,17 @@ app.get('/syncParty', function(req, res){
   let user_id = req.user.id;
   
    //final lag time is minus the get request above
-   var final_lag = (Date.now() - res.body.date)/1000
-   var final_seek_time = res.data.info.songDuration + final_lag
+   var final_lag = (Date.now() - req.body.date)/1000
+   var final_seek_time = req.data.info.songDuration + final_lag
    console.log(`The final seektime is: ${final_seek_time} with lag of: ${final_lag}`)
-   console.log(`final-flight data send is: ${res.body.info.songDuration} and ${res.body.info.songID}. Time: ${res.body.date}`)
+   console.log(`final-flight data send is: ${req.body.info.songDuration} and ${req.body.info.songID}. Time: ${res.body.date}`)
 
 	client.get(user_id, (err, data) => {
 		axios({
 			method: "PUT",
 			url: `https://api.spotify.com/v1/me/player/play`,
 			headers: {Authorization: "Bearer " + data},
-			data: {"uris": [`spotify:track:${res.data.info.songID}`]}
+			data: {"uris": [`spotify:track:${req.body.info.songID}`]}
 		}, console.log(data))
 		.then(function(response){
 			axios({
