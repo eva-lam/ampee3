@@ -181,19 +181,19 @@ app.get('/dj/:id', (req, res)=>{
   if((req.params.id) === ''){
       res.send("you are going to room of nothing :(")
   }else{
-      // for (var x in USER_INFO){
-      //   if(req.params.id === USER_INFO[x][0]){
+      for (var x in USER_INFO){
+        if(req.params.id === USER_INFO[x][0]){
           
-      //     if(USER_INFO[x][2]=== 'sportify'){
+          if(USER_INFO[x][2]=== 'sportify'){
             
-      //     res.render('joinparty', {room: req.params.id})
-      //     }else{
-      //     res.render('audiRoom', {room: req.params.id})
-      //     }
-      //   }
-      // }
+          res.render('joinparty', {room: req.params.id})
+          }else{
+          res.render('audiRoom', {room: req.params.id})
+          }
+        }
+      }
     }
-    res.render('joinparty', {room: req.params.id}) 
+    
   
 });
 
@@ -513,7 +513,7 @@ app.get("/djyt", (req, res)=>{
 })
 
 app.get("/party", (req, res)=>{
-  res.render('party')
+  res.render('party',{user: req.body.id})
 })
 
 
@@ -573,7 +573,7 @@ app.get('/syncDJ', function(req, res){
     current_track_duration = response.data.item.duration;
     current_track_artist = response.data.item.artists[0].name;
     current_track_isPlaying = response.data.item.is_playing;
-    current_track_playlist = response.data.item.content.uri.substr(30);
+    current_track_playlist = response.data.context.uri.substr(30);
     console.log("current playback information grabbed!");
     
     //res.json({"songName": current_track_name, "songArt": current_album_art, "songPosition": current_position, "songDuration": current_track_duration, "songArtist": current_track_artist, "songIsPlaying": current_track_isPlaying});
@@ -584,21 +584,23 @@ app.get('/syncDJ', function(req, res){
 })
 
 
-app.get('/syncParty', function(req, res){
+app.post('/syncParty', function(req, res){
   let user_id = req.user.id;
   
    //final lag time is minus the get request above
-   var final_lag = (Date.now() - res.data.date)/1000
-   var final_seek_time = res.data.info.songDuration + final_lag
+   console.log(req.body);
    console.log(`The final seektime is: ${final_seek_time} with lag of: ${final_lag}`)
-   console.log(`final-flight data send is: ${res.data.info.songDuration} and ${res.data.info.songID}`)
+   console.log(`final-flight data send is: ${req.body.info.songDuration} and ${req.body.info.songID}. Time: ${res.body.date}`)
 
+   var final_lag = (Date.now() - req.body.date)/1000
+   var final_seek_time = req.body.info.songDuration + final_lag
+   
 	client.get(user_id, (err, data) => {
 		axios({
 			method: "PUT",
 			url: `https://api.spotify.com/v1/me/player/play`,
 			headers: {Authorization: "Bearer " + data},
-			data: {"uris": [`spotify:track:${res.data.info.songID}`]}
+			data: {"uris": [`spotify:track:${req.body.info.songID}`]}
 		}, console.log(data))
 		.then(function(response){
 			axios({
