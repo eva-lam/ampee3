@@ -113,7 +113,10 @@ h7{
     font-size:12px;
     text-align:center;
 }
-
+title{
+    color:white;
+    font-size:12px; 
+}
 .login_div{
     margin:30px;
 }
