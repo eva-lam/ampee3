@@ -186,9 +186,9 @@ app.get('/dj/:id', (req, res)=>{
           
           if(USER_INFO[x][2]=== 'sportify'){
             
-          res.render('joinparty', {room: req.params.id})
+          return res.render('joinparty', {room: req.params.id})
           }else{
-          res.render('audiRoom', {room: req.params.id})
+          return res.render('audiRoom', {room: req.params.id})
           }
         }
       }
